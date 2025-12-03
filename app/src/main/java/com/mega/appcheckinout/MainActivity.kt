@@ -1,6 +1,6 @@
 // MainActivity.kt
 package com.mega.appcheckinout
-aaaaa
+
 import android.R
 import android.os.Bundle
 import androidx.activity.ComponentActivity
