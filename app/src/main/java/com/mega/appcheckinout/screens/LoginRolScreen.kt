@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mega.appcheckinout.ui.theme.BotonVolver
 
 // ==================== PANTALLA 5: Login por Rol ====================
 @Composable
@@ -54,18 +55,12 @@ fun LoginRolScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        TextButton(onClick = onVolver) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.ArrowBack,
-                    contentDescription = null,
-                    tint = colorPrimario,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Volver", color = colorPrimario)
-            }
-        }
+        BotonVolver(
+            onClick = onVolver,
+            colorIcono = Color.White,
+            colorFondo = colorPrimario,
+            modifier = Modifier.align(Alignment.Start)
+        )
 
         Spacer(modifier = Modifier.weight(0.5f))
 

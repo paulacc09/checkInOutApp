@@ -41,7 +41,7 @@ fun LoginEmpresaScreen(
     onIniciarSesion: () -> Unit,
     colorPrimario: Color
 ) {
-    var rutEmail by remember { mutableStateOf("") }
+    var nitEmail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var recordarSesion by remember { mutableStateOf(false) }
 
@@ -81,9 +81,9 @@ fun LoginEmpresaScreen(
 
         // Campo RUT o email
         OutlinedTextField(
-            value = rutEmail,
-            onValueChange = { rutEmail = it },
-            label = { Text("RUT o e-mail") },
+            value = nitEmail,
+            onValueChange = { nitEmail = it },
+            label = { Text("NIT o e-mail") },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorPrimario,
@@ -131,7 +131,7 @@ fun LoginEmpresaScreen(
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = colorPrimario),
             shape = RoundedCornerShape(25.dp),
-            enabled = password.isNotBlank() && rutEmail.isNotBlank()
+            enabled = password.isNotBlank() && nitEmail.isNotBlank()
         ) {
             Text("Iniciar Sesión", fontSize = 16.sp)
         }

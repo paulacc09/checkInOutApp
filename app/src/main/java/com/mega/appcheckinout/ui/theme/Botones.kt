@@ -11,6 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 @Composable
 fun BotonAccesoRapido(
     texto: String,
@@ -51,5 +54,33 @@ fun BotonGestion(
             textAlign = TextAlign.Center,
             lineHeight = 18.sp
         )
+    }
+}
+
+// ============= COMPONENTE BOTÓN VOLVER =============
+@Composable
+fun BotonVolver(
+    onClick: () -> Unit,
+    colorIcono: Color = Color.White,
+    colorFondo: Color = Color(0xFF4A90A4),
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.size(48.dp),
+        shape = CircleShape,
+        colors = CardDefaults.cardColors(containerColor = colorFondo),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    ) {
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Volver",
+                tint = colorIcono,
+                modifier = Modifier.size(24.dp)
+            )
+        }
     }
 }

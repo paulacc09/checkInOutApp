@@ -33,6 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.Trabajador
+import com.mega.appcheckinout.ui.theme.BotonVolver
+
 
 // Pantalla para editar trabajador (muy básica)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,18 +57,12 @@ fun EditarTrabajadorScreen(
             .background(Color(0xFFE8EFF5))
             .padding(16.dp)
     ) {
-        TextButton(onClick = onVolver) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.ArrowBack,
-                    contentDescription = null,
-                    tint = colorPrimario,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Volver", color = colorPrimario)
-            }
-        }
+        BotonVolver(
+            onClick = onVolver,
+            colorIcono = Color.White,
+            colorFondo = colorPrimario,
+            modifier = Modifier.align(Alignment.Start)
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 

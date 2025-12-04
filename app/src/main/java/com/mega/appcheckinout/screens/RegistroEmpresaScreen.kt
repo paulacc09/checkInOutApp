@@ -36,6 +36,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mega.appcheckinout.ui.theme.BotonVolver
 
 // ==================== PANTALLA 2: Registro Empresa ====================
 @Composable
@@ -44,7 +45,7 @@ fun RegistroEmpresaScreen(
     onVolver: () -> Unit,
     colorPrimario: Color
 ) {
-    var rut by remember { mutableStateOf("") }
+    var nit by remember { mutableStateOf("") }
     var razonSocial by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var telefono by remember { mutableStateOf("") }
@@ -89,9 +90,9 @@ fun RegistroEmpresaScreen(
 
         // Campos del formulario
         OutlinedTextField(
-            value = rut,
-            onValueChange = { rut = it },
-            label = { Text("RUT") },
+            value = nit,
+            onValueChange = { nit = it },
+            label = { Text("NIT") },
             modifier = Modifier.fillMaxWidth(),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorPrimario,
@@ -176,7 +177,7 @@ fun RegistroEmpresaScreen(
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(containerColor = colorPrimario),
             shape = RoundedCornerShape(25.dp),
-            enabled = rut.isNotBlank() && razonSocial.isNotBlank() &&
+            enabled = nit.isNotBlank() && razonSocial.isNotBlank() &&
                     email.isNotBlank() && password.isNotBlank() && confirmarPassword.isNotBlank()
         ) {
             Text("Registrar empresa", fontSize = 16.sp)
@@ -184,18 +185,12 @@ fun RegistroEmpresaScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextButton(onClick = onVolver) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    Icons.Default.ArrowBack,
-                    contentDescription = null,
-                    tint = colorPrimario,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Volver", color = colorPrimario)
-            }
-        }
+        BotonVolver(
+            onClick = onVolver,
+            colorIcono = Color.White,
+            colorFondo = colorPrimario,
+            modifier = Modifier.align(Alignment.Start)
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
     }

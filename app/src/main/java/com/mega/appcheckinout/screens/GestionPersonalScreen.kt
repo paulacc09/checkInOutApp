@@ -13,18 +13,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mega.appcheckinout.ui.theme.BotonVolver
 
 // ==================== PANTALLA 7: Gestión de Personal (Menú) ====================
 @Composable
@@ -51,13 +49,11 @@ fun GestionPersonalScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = onVolver) {
-                Icon(
-                    painter = painterResource(android.R.drawable.ic_menu_revert),
-                    contentDescription = "Volver",
-                    tint = colorPrimario
-                )
-            }
+            BotonVolver(
+                onClick = onVolver,
+                colorIcono = Color.White,
+                colorFondo = colorPrimario
+            )
 
             Text(
                 text = "GESTIÓN DE PERSONAL",

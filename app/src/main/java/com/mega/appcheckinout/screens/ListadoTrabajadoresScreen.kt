@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.Trabajador           // ← Modelo BÁSICO
 import com.mega.appcheckinout.models.TrabajadorCompleto    // ← Modelo COMPLETO
 import com.mega.appcheckinout.tarjetas.TarjetaTrabajador
+import com.mega.appcheckinout.ui.theme.BotonVolver
 
 
 /**
@@ -150,18 +151,11 @@ fun ListadoTrabajadoresScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextButton(onClick = onVolver) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = null,
-                            tint = colorPrimario,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Volver", color = colorPrimario)
-                    }
-                }
+                BotonVolver(
+                    onClick = onVolver,
+                    colorIcono = Color.White,
+                    colorFondo = colorPrimario
+                )
 
                 Text(
                     text = "LISTA DE TRABAJADORES",

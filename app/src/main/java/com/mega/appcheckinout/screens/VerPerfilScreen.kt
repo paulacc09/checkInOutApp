@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.Trabajador
 import com.mega.appcheckinout.ui.theme.AppColors
+import com.mega.appcheckinout.ui.theme.BotonVolver
+import androidx.compose.ui.Alignment
 
 /**
  * Pantalla para visualizar el perfil completo de un trabajador
@@ -38,13 +40,12 @@ fun VerPerfilScreen(
             .padding(16.dp)
     ) {
         // Botón volver
-        IconButton(onClick = onVolver) {
-            Icon(
-                painter = painterResource(R.drawable.ic_menu_revert),
-                contentDescription = "Volver",
-                tint = colorPrimario  // ← Ahora usa el parámetro
-            )
-        }
+        BotonVolver(
+            onClick = onVolver,
+            colorIcono = Color.White,
+            colorFondo = colorPrimario,
+            modifier = Modifier.align(Alignment.Start)
+        )
 
         Spacer(modifier = Modifier.height(8.dp))
 
