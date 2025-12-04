@@ -1,0 +1,202 @@
+package com.mega.appcheckinout.screens
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+// ==================== PANTALLA 2: Registro Empresa ====================
+@Composable
+fun RegistroEmpresaScreen(
+    onRegistroExitoso: () -> Unit,
+    onVolver: () -> Unit,
+    colorPrimario: Color
+) {
+    var rut by remember { mutableStateOf("") }
+    var razonSocial by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var telefono by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmarPassword by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Logo pequeÃ±o
+        Box(
+            modifier = Modifier
+                .size(120.dp)
+                .background(Color.White, shape = RoundedCornerShape(60.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "CHECKINOUT",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = colorPrimario,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "REGISTRO",
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
+            color = colorPrimario
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Campos del formulario
+        OutlinedTextField(
+            value = rut,
+            onValueChange = { rut = it },
+            label = { Text("RUT") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = colorPrimario,
+                focusedLabelColor = colorPrimario
+            )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = razonSocial,
+            onValueChange = { razonSocial = it },
+            label = { Text("Razón social") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = colorPrimario,
+                focusedLabelColor = colorPrimario
+            )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("E-mail") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = colorPrimario,
+                focusedLabelColor = colorPrimario
+            )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = telefono,
+            onValueChange = { telefono = it },
+            label = { Text("Teléfono") },
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = colorPrimario,
+                focusedLabelColor = colorPrimario
+            )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Contraseña") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = colorPrimario,
+                focusedLabelColor = colorPrimario
+            )
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = confirmarPassword,
+            onValueChange = { confirmarPassword = it },
+            label = { Text("Confirmar contraseña") },
+            visualTransformation = PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = colorPrimario,
+                focusedLabelColor = colorPrimario
+            )
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // BotÃ³n Registrar empresa
+        Button(
+            onClick = onRegistroExitoso,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = colorPrimario),
+            shape = RoundedCornerShape(25.dp),
+            enabled = rut.isNotBlank() && razonSocial.isNotBlank() &&
+                    email.isNotBlank() && password.isNotBlank() && confirmarPassword.isNotBlank()
+        ) {
+            Text("Registrar empresa", fontSize = 16.sp)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(onClick = onVolver) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Default.ArrowBack,
+                    contentDescription = null,
+                    tint = colorPrimario,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Volver", color = colorPrimario)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+    }
+}
