@@ -1,82 +1,54 @@
 package com.mega.appcheckinout.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mega.appcheckinout.models.Trabajador           // ← Modelo BÁSICO
-import com.mega.appcheckinout.models.TrabajadorCompleto    // ← Modelo COMPLETO
+import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.tarjetas.TarjetaTrabajador
 import com.mega.appcheckinout.ui.theme.BotonVolver
 
-
 /**
- * IMPORTANTE:
- * - TrabajadorCompleto: Se usa en el LISTADO (tiene todos los campos)
- * - Trabajador: Se usa en PERFIL y EDITAR (solo campos básicos)
- *
- * El flujo es:
- * 1. ListadoTrabajadores maneja TrabajadorCompleto (lista completa)
- * 2. Al hacer click en "Ver perfil" → convierte a Trabajador con .toTrabajador()
- * 3. VerPerfilScreen recibe Trabajador (solo campos básicos)
+ * Vista mejorada de listado de trabajadores
+ * - Alterna entre vista de tarjetas y vista de tabla
+ * - Preparado para exportar a PDF/CSV
  */
 
+enum class VistaListado {
+    TARJETAS,
+    TABLA
+}
 
-// ==================== PANTALLA 9: Listado de Trabajadores ====================
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListadoTrabajadoresScreen(
     onVolver: () -> Unit,
     onRegistrarPersonal: () -> Unit,
     onRegistrarBiometrico: () -> Unit,
-    onVerPerfil: (Trabajador) -> Unit,
-    onEditarTrabajador: (Trabajador) -> Unit,
+    onVerPerfil: (TrabajadorCompleto) -> Unit,
+    onEditarTrabajador: (TrabajadorCompleto) -> Unit,
     colorPrimario: Color,
     colorSecundario: Color
 ) {
-    // Estados para bÃºsqueda y filtros
+    // Estados para búsqueda y filtros
     var textoBusqueda by remember { mutableStateOf("") }
     var mostrarFiltros by remember { mutableStateOf(false) }
     var filtroObra by remember { mutableStateOf("Todas") }
@@ -86,28 +58,173 @@ fun ListadoTrabajadoresScreen(
     var expandirFiltroRol by remember { mutableStateOf(false) }
     var expandirFiltroBiometria by remember { mutableStateOf(false) }
 
-    // MenÃº contextual para cada trabajador
+    // Nuevo: Estado para alternar vista
+    var vistaActual by remember { mutableStateOf(VistaListado.TARJETAS) }
+
+    // Nuevo: Estado para menú de exportación
+    var mostrarMenuExportar by remember { mutableStateOf(false) }
+
+    // Menú contextual para cada trabajador
     var trabajadorMenuExpanded by remember { mutableStateOf<String?>(null) }
     var mostrarDialogoEliminar by remember { mutableStateOf<TrabajadorCompleto?>(null) }
 
-
-    // Datos de ejemplo ampliados
+    // Datos de ejemplo
     val trabajadoresCompletos = remember {
         listOf(
-            TrabajadorCompleto("1234567890", "García", "Rodríguez", "Juan", "Carlos", "Cédula",
-                "Operativo", "Latero", "Mandarino - Ibagué", true, "Activo"),
-            TrabajadorCompleto("0987654321", "Martínez", "López", "María", "Fernanda", "Cédula",
-                "Inspector SST", "", "Bosque robledal - Rionegro", true, "Activo"),
-            TrabajadorCompleto("1122334455", "González", "Pérez", "Pedro", "Antonio", "Cédula",
-                "Operativo", "Mampostero", "Mandarino - IbaguÃ©", false, "Activo"),
-            TrabajadorCompleto("5544332211", "Ramírez", "Torres", "Ana", "María", "Cédula",
-                "Encargado", "", "Hacienda Nakare - Villavicencio", true, "Activo"),
-            TrabajadorCompleto("6677889900", "Sánchez", "Vargas", "Luis", "Fernando", "Pasaporte",
-                "Operativo", "Rematador", "Pomelo - Bogotá", false, "Activo"),
-            TrabajadorCompleto("9988776655", "Díaz", "Castro", "Carolina", "", "Cédula",
-                "Operativo", "Aseo", "Mandarino - Ibagué", true, "Inactivo"),
-            TrabajadorCompleto("3344556677", "Morales", "Ruiz", "Jorge", "Andrés", "Cédula",
-                "Inspector SST", "", "Bosque robledal - Rionegro", false, "Activo")
+            TrabajadorCompleto(
+                id = "1",
+                primerNombre = "Juan",
+                segundoNombre = "Carlos",
+                primerApellido = "García",
+                segundoApellido = "Rodríguez",
+                fechaNacimiento = "15/03/1990",
+                tipoDocumento = "Cédula",
+                numeroDocumento = "1234567890",
+                telefono = "3001234567",
+                direccion = "Calle 50 #23-45, Ibagué",
+                rol = "Operativo",
+                subCargo = "Latero",
+                actividad = "Muros",
+                obraAsignada = "Mandarino - Ibagué",
+                arl = "Sura",
+                eps = "Sanitas",
+                fechaExamen = "01/01/2024",
+                fechaCursoAlturas = "15/01/2024",
+                biometriaRegistrada = true,
+                estado = "Activo"
+            ),
+            TrabajadorCompleto(
+                id = "2",
+                primerNombre = "María",
+                segundoNombre = "Fernanda",
+                primerApellido = "Martínez",
+                segundoApellido = "López",
+                fechaNacimiento = "22/07/1985",
+                tipoDocumento = "Cédula",
+                numeroDocumento = "0987654321",
+                telefono = "3109876543",
+                direccion = "Carrera 10 #15-20, Rionegro",
+                rol = "Inspector SST",
+                subCargo = "",
+                actividad = "",
+                obraAsignada = "Bosque robledal - Rionegro",
+                arl = "Positiva",
+                eps = "Compensar",
+                fechaExamen = "10/02/2024",
+                fechaCursoAlturas = "20/02/2024",
+                biometriaRegistrada = true,
+                estado = "Activo"
+            ),
+            TrabajadorCompleto(
+                id = "3",
+                primerNombre = "Pedro",
+                segundoNombre = "Antonio",
+                primerApellido = "González",
+                segundoApellido = "Pérez",
+                fechaNacimiento = "05/11/1992",
+                tipoDocumento = "Cédula",
+                numeroDocumento = "1122334455",
+                telefono = "3201122334",
+                direccion = "Avenida 30 #12-34, Ibagué",
+                rol = "Operativo",
+                subCargo = "Mampostero",
+                actividad = "Muros",
+                obraAsignada = "Mandarino - Ibagué",
+                arl = "Sura",
+                eps = "Nueva EPS",
+                fechaExamen = "15/03/2024",
+                fechaCursoAlturas = "25/03/2024",
+                biometriaRegistrada = false,
+                estado = "Activo"
+            ),
+            TrabajadorCompleto(
+                id = "4",
+                primerNombre = "Ana",
+                segundoNombre = "María",
+                primerApellido = "Ramírez",
+                segundoApellido = "Torres",
+                fechaNacimiento = "18/09/1988",
+                tipoDocumento = "Cédula",
+                numeroDocumento = "5544332211",
+                telefono = "3155443322",
+                direccion = "Calle 20 #8-15, Villavicencio",
+                rol = "Encargado",
+                subCargo = "",
+                actividad = "",
+                obraAsignada = "Hacienda Nakare - Villavicencio",
+                arl = "Colmena",
+                eps = "Salud Total",
+                fechaExamen = "05/04/2024",
+                fechaCursoAlturas = "12/04/2024",
+                biometriaRegistrada = true,
+                estado = "Activo"
+            ),
+            TrabajadorCompleto(
+                id = "5",
+                primerNombre = "Luis",
+                segundoNombre = "Fernando",
+                primerApellido = "Sánchez",
+                segundoApellido = "Vargas",
+                fechaNacimiento = "30/01/1995",
+                tipoDocumento = "Pasaporte",
+                numeroDocumento = "6677889900",
+                telefono = "3206677889",
+                direccion = "Transversal 5 #40-20, Bogotá",
+                rol = "Operativo",
+                subCargo = "Rematador",
+                actividad = "Parqueadero",
+                obraAsignada = "Pomelo - Bogotá",
+                arl = "Positiva",
+                eps = "Compensar",
+                fechaExamen = "20/04/2024",
+                fechaCursoAlturas = "28/04/2024",
+                biometriaRegistrada = false,
+                estado = "Activo"
+            ),
+            TrabajadorCompleto(
+                id = "6",
+                primerNombre = "Carolina",
+                segundoNombre = "",
+                primerApellido = "Díaz",
+                segundoApellido = "Castro",
+                fechaNacimiento = "12/06/1991",
+                tipoDocumento = "Cédula",
+                numeroDocumento = "9988776655",
+                telefono = "3159988776",
+                direccion = "Diagonal 25 #18-30, Ibagué",
+                rol = "Operativo",
+                subCargo = "Aseo",
+                actividad = "",
+                obraAsignada = "Mandarino - Ibagué",
+                arl = "Sura",
+                eps = "Sanitas",
+                fechaExamen = "01/05/2024",
+                fechaCursoAlturas = "10/05/2024",
+                biometriaRegistrada = true,
+                estado = "Inactivo"
+            ),
+            TrabajadorCompleto(
+                id = "7",
+                primerNombre = "Jorge",
+                segundoNombre = "Andrés",
+                primerApellido = "Morales",
+                segundoApellido = "Ruiz",
+                fechaNacimiento = "25/04/1987",
+                tipoDocumento = "Cédula",
+                numeroDocumento = "3344556677",
+                telefono = "3103344556",
+                direccion = "Carrera 15 #22-10, Rionegro",
+                rol = "Inspector SST",
+                subCargo = "",
+                actividad = "",
+                obraAsignada = "Bosque robledal - Rionegro",
+                arl = "Colmena",
+                eps = "Nueva EPS",
+                fechaExamen = "15/05/2024",
+                fechaCursoAlturas = "22/05/2024",
+                biometriaRegistrada = false,
+                estado = "Activo"
+            )
         )
     }
 
@@ -121,7 +238,7 @@ fun ListadoTrabajadoresScreen(
     val trabajadoresFiltrados = trabajadoresCompletos.filter { trabajador ->
         val coincideBusqueda = textoBusqueda.isEmpty() ||
                 trabajador.nombreCompleto().contains(textoBusqueda, ignoreCase = true) ||
-                trabajador.id.contains(textoBusqueda, ignoreCase = true)
+                trabajador.numeroDocumento.contains(textoBusqueda, ignoreCase = true)
 
         val coincideObra = filtroObra == "Todas" || trabajador.obraAsignada == filtroObra
         val coincideRol = filtroRol == "Todos" || trabajador.rol == filtroRol
@@ -137,13 +254,13 @@ fun ListadoTrabajadoresScreen(
             .fillMaxSize()
             .background(Color(0xFFE8EFF5))
     ) {
-        // Header con bÃºsqueda y filtros
+        // Header con búsqueda y filtros
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFB8D4E3))
         ) {
-            // Fila superior: Volver, TÃ­tulo, BÃºsqueda, Filtros
+            // Fila superior: Volver, Título, Controles
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,7 +275,7 @@ fun ListadoTrabajadoresScreen(
                 )
 
                 Text(
-                    text = "LISTA DE TRABAJADORES",
+                    text = "LISTADO DE TRABAJADORES",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = colorPrimario,
@@ -167,12 +284,67 @@ fun ListadoTrabajadoresScreen(
                 )
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    IconButton(onClick = { /* Activar bÃºsqueda */ }) {
+                    // Botón cambiar vista
+                    IconButton(onClick = {
+                        vistaActual = if (vistaActual == VistaListado.TARJETAS) {
+                            VistaListado.TABLA
+                        } else {
+                            VistaListado.TARJETAS
+                        }
+                    }) {
                         Icon(
-                            painter = painterResource(android.R.drawable.ic_menu_search),
-                            contentDescription = "Buscar",
+                            painter = painterResource(
+                                if (vistaActual == VistaListado.TARJETAS)
+                                    android.R.drawable.ic_menu_view
+                                else
+                                    android.R.drawable.ic_menu_agenda
+                            ),
+                            contentDescription = "Cambiar vista",
                             tint = colorPrimario
                         )
+                    }
+
+                    // Botón exportar
+                    Box {
+                        IconButton(onClick = { mostrarMenuExportar = !mostrarMenuExportar }) {
+                            Icon(
+                                painter = painterResource(android.R.drawable.ic_menu_save),
+                                contentDescription = "Exportar",
+                                tint = colorPrimario
+                            )
+                        }
+
+                        DropdownMenu(
+                            expanded = mostrarMenuExportar,
+                            onDismissRequest = { mostrarMenuExportar = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Exportar a PDF") },
+                                onClick = {
+                                    // TODO: Implementar exportación PDF
+                                    mostrarMenuExportar = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(android.R.drawable.ic_menu_save),
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Exportar a CSV") },
+                                onClick = {
+                                    // TODO: Implementar exportación CSV
+                                    mostrarMenuExportar = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        painter = painterResource(android.R.drawable.ic_menu_save),
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+                        }
                     }
 
                     IconButton(onClick = { mostrarFiltros = !mostrarFiltros }) {
@@ -185,7 +357,7 @@ fun ListadoTrabajadoresScreen(
                 }
             }
 
-            // Barra de bÃºsqueda
+            // Barra de búsqueda
             OutlinedTextField(
                 value = textoBusqueda,
                 onValueChange = { textoBusqueda = it },
@@ -239,7 +411,7 @@ fun ListadoTrabajadoresScreen(
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
 
-                        // Filtro por Obra
+                        // Filtros (mantener código existente)
                         ExposedDropdownMenuBox(
                             expanded = expandirFiltroObra,
                             onExpandedChange = { expandirFiltroObra = it }
@@ -277,7 +449,6 @@ fun ListadoTrabajadoresScreen(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Filtro por Rol
                         ExposedDropdownMenuBox(
                             expanded = expandirFiltroRol,
                             onExpandedChange = { expandirFiltroRol = it }
@@ -315,7 +486,6 @@ fun ListadoTrabajadoresScreen(
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Filtro por Estado BiometrÃ­a
                         ExposedDropdownMenuBox(
                             expanded = expandirFiltroBiometria,
                             onExpandedChange = { expandirFiltroBiometria = it }
@@ -353,7 +523,6 @@ fun ListadoTrabajadoresScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        // BotÃ³n limpiar filtros
                         TextButton(
                             onClick = {
                                 filtroObra = "Todas"
@@ -369,7 +538,7 @@ fun ListadoTrabajadoresScreen(
             }
         }
 
-        // Contenido principal
+        // Contenido principal - Alternar entre vistas
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -384,59 +553,34 @@ fun ListadoTrabajadoresScreen(
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
-                // Lista de trabajadores
-                if (trabajadoresFiltrados.isEmpty()) {
-                    // Mensaje cuando no hay resultados
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "No se encontraron trabajadores",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Gray
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Intenta con otros criterios de búsqueda",
-                                fontSize = 14.sp,
-                                color = Color.Gray
-                            )
-                        }
+                // Alternar entre vista de tarjetas y tabla
+                when (vistaActual) {
+                    VistaListado.TARJETAS -> {
+                        VistaTarjetas(
+                            trabajadores = trabajadoresFiltrados,
+                            colorPrimario = colorPrimario,
+                            colorSecundario = colorSecundario,
+                            trabajadorMenuExpanded = trabajadorMenuExpanded,
+                            onMenuExpandir = { id ->
+                                trabajadorMenuExpanded = if (trabajadorMenuExpanded == id) null else id
+                            },
+                            onVerPerfil = onVerPerfil,
+                            onEditar = onEditarTrabajador,
+                            onEliminar = { mostrarDialogoEliminar = it }
+                        )
                     }
-                } else {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        items(trabajadoresFiltrados) { trabajadorCompleto ->
-                            TarjetaTrabajador(
-                                trabajador = trabajadorCompleto,
-                                colorPrimario = colorPrimario,
-                                colorSecundario = colorSecundario,
-                                menuExpanded = trabajadorMenuExpanded == trabajadorCompleto.id,
-                                onMenuExpandir = {
-                                    trabajadorMenuExpanded = if (trabajadorMenuExpanded == trabajadorCompleto.id) {
-                                        null
-                                    } else {
-                                        trabajadorCompleto.id
-                                    }
-                                },
-                                onVerPerfil = { onVerPerfil(trabajadorCompleto.toTrabajador()) },
-                                onEditar = { onEditarTrabajador(trabajadorCompleto.toTrabajador()) },
-                                onEliminar = { mostrarDialogoEliminar = trabajadorCompleto },
-                                onAsignarObra = { /* AcciÃ³n futura */ }
-                            )
-                        }
+                    VistaListado.TABLA -> {
+                        VistaTabla(
+                            trabajadores = trabajadoresFiltrados,
+                            colorPrimario = colorPrimario,
+                            onVerPerfil = onVerPerfil,
+                            onEditar = onEditarTrabajador
+                        )
                     }
                 }
             }
 
-            // BotÃ³n flotante "Nuevo Trabajador"
+            // Botón flotante "Nuevo Trabajador"
             FloatingActionButton(
                 onClick = onRegistrarPersonal,
                 containerColor = colorPrimario,
@@ -465,7 +609,7 @@ fun ListadoTrabajadoresScreen(
         }
     }
 
-    // DiÃ¡logo de confirmaciÃ³n para eliminar
+    // Diálogo de confirmación para eliminar
     if (mostrarDialogoEliminar != null) {
         AlertDialog(
             onDismissRequest = { mostrarDialogoEliminar = null },
@@ -476,7 +620,7 @@ fun ListadoTrabajadoresScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        // AquÃ­ irÃ­a la lÃ³gica para eliminar/desactivar
+                        // TODO: Implementar lógica para eliminar/desactivar
                         mostrarDialogoEliminar = null
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
@@ -489,6 +633,282 @@ fun ListadoTrabajadoresScreen(
                     Text("Cancelar")
                 }
             }
+        )
+    }
+}
+
+// ========== VISTA DE TARJETAS (Original) ==========
+@Composable
+private fun VistaTarjetas(
+    trabajadores: List<TrabajadorCompleto>,
+    colorPrimario: Color,
+    colorSecundario: Color,
+    trabajadorMenuExpanded: String?,
+    onMenuExpandir: (String) -> Unit,
+    onVerPerfil: (TrabajadorCompleto) -> Unit,
+    onEditar: (TrabajadorCompleto) -> Unit,
+    onEliminar: (TrabajadorCompleto) -> Unit
+) {
+    if (trabajadores.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "No se encontraron trabajadores",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Intenta con otros criterios de búsqueda",
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+            }
+        }
+    } else {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(trabajadores) { trabajador ->
+                TarjetaTrabajador(
+                    trabajador = trabajador,
+                    colorPrimario = colorPrimario,
+                    colorSecundario = colorSecundario,
+                    menuExpanded = trabajadorMenuExpanded == trabajador.id,
+                    onMenuExpandir = { onMenuExpandir(trabajador.id) },
+                    onVerPerfil = { onVerPerfil(trabajador) },
+                    onEditar = { onEditar(trabajador) },
+                    onEliminar = { onEliminar(trabajador) },
+                    onAsignarObra = { /* Acción futura */ }
+                )
+            }
+            // Espacio adicional para el FAB
+            item { Spacer(modifier = Modifier.height(80.dp)) }
+        }
+    }
+}
+
+// ========== VISTA DE TABLA (Nueva) ==========
+@Composable
+private fun VistaTabla(
+    trabajadores: List<TrabajadorCompleto>,
+    colorPrimario: Color,
+    onVerPerfil: (TrabajadorCompleto) -> Unit,
+    onEditar: (TrabajadorCompleto) -> Unit
+) {
+    if (trabajadores.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "No se encontraron trabajadores",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Gray
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Intenta con otros criterios de búsqueda",
+                    fontSize = 14.sp,
+                    color = Color.Gray
+                )
+            }
+        }
+    } else {
+        Card(
+            modifier = Modifier.fillMaxSize(),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(2.dp)
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Encabezados de la tabla (fijos con scroll horizontal)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(colorPrimario)
+                        .horizontalScroll(rememberScrollState())
+                        .padding(vertical = 12.dp, horizontal = 8.dp)
+                ) {
+                    EncabezadoTabla("ID", 80.dp)
+                    EncabezadoTabla("Apellidos", 150.dp)
+                    EncabezadoTabla("Nombres", 150.dp)
+                    EncabezadoTabla("Tipo Doc.", 100.dp)
+                    EncabezadoTabla("Documento", 120.dp)
+                    EncabezadoTabla("Rol", 120.dp)
+                    EncabezadoTabla("Obra", 200.dp)
+                    EncabezadoTabla("Biometría", 100.dp)
+                    EncabezadoTabla("Acciones", 120.dp)
+                }
+
+                Divider(color = Color.Gray, thickness = 1.dp)
+
+                // Filas de datos con scroll
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(trabajadores) { trabajador ->
+                        FilaTrabajador(
+                            trabajador = trabajador,
+                            colorPrimario = colorPrimario,
+                            onVerPerfil = { onVerPerfil(trabajador) },
+                            onEditar = { onEditar(trabajador) }
+                        )
+                        Divider(color = Color.LightGray, thickness = 0.5.dp)
+                    }
+                    // Espacio adicional para el FAB
+                    item { Spacer(modifier = Modifier.height(80.dp)) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun EncabezadoTabla(texto: String, ancho: androidx.compose.ui.unit.Dp) {
+    Box(
+        modifier = Modifier
+            .width(ancho)
+            .padding(horizontal = 4.dp),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Text(
+            text = texto,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
+private fun FilaTrabajador(
+    trabajador: TrabajadorCompleto,
+    colorPrimario: Color,
+    onVerPerfil: () -> Unit,
+    onEditar: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(if (trabajador.estado == "Activo") Color.White else Color(0xFFFFF3E0))
+            .horizontalScroll(rememberScrollState())
+            .padding(vertical = 8.dp, horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // ID
+        CeldaTabla(trabajador.id, 80.dp)
+
+        // Apellidos
+        CeldaTabla(trabajador.apellidosCompletos(), 150.dp)
+
+        // Nombres
+        CeldaTabla(trabajador.nombresCompletos(), 150.dp)
+
+        // Tipo de Documento
+        CeldaTabla(trabajador.tipoDocumento, 100.dp)
+
+        // Número de Documento
+        CeldaTabla(trabajador.numeroDocumento, 120.dp)
+
+        // Rol
+        CeldaTabla(trabajador.rol, 120.dp)
+
+        // Obra
+        CeldaTabla(trabajador.obraAsignada, 200.dp)
+
+        // Biometría
+        Box(
+            modifier = Modifier
+                .width(100.dp)
+                .padding(horizontal = 4.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = if (trabajador.biometriaRegistrada)
+                            Color(0xFF4CAF50) else Color(0xFFF44336),
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            ) {
+                Text(
+                    text = if (trabajador.biometriaRegistrada) "Sí" else "No",
+                    fontSize = 11.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
+        // Acciones
+        Box(
+            modifier = Modifier
+                .width(120.dp)
+                .padding(horizontal = 4.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Botón Ver
+                IconButton(
+                    onClick = onVerPerfil,
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(android.R.drawable.ic_menu_view),
+                        contentDescription = "Ver",
+                        tint = colorPrimario,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+
+                // Botón Editar
+                IconButton(
+                    onClick = onEditar,
+                    modifier = Modifier.size(32.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(android.R.drawable.ic_menu_edit),
+                        contentDescription = "Editar",
+                        tint = Color(0xFFFF9800),
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CeldaTabla(texto: String, ancho: androidx.compose.ui.unit.Dp) {
+    Box(
+        modifier = Modifier
+            .width(ancho)
+            .padding(horizontal = 4.dp),
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Text(
+            text = texto,
+            fontSize = 12.sp,
+            color = Color.Black,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

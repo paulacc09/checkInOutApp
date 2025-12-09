@@ -1,15 +1,13 @@
 package com.mega.appcheckinout.navigation
 
-
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.mega.appcheckinout.models.Trabajador
+import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.screens.*
-
 
 /**
  * CheckInOutApp - Controlador central de navegación de la aplicación
@@ -34,17 +32,15 @@ fun CheckInOutApp() {
     var pantallaActual by remember { mutableStateOf("login") }
 
     // Guarda el rol que el usuario seleccionó (Administrativo, Inspector SST, Encargado)
-    var rolSeleccionado by remember { mutableStateOf("") }  // â† Nueva variable para guardar el rol
+    var rolSeleccionado by remember { mutableStateOf("") }
 
-    // Guarda el trabajador que se está viendo/editando en detalle
-    var trabajadorSeleccionado by remember { mutableStateOf<Trabajador?>(null) }
-
+    // Guarda el trabajador completo para ver el perfil con todos los datos
+    var trabajadorCompletoSeleccionado by remember { mutableStateOf<TrabajadorCompleto?>(null) }
 
     // Colores del tema
     val colorPrimario = Color(0xFF4A6FA5)
     val colorSecundario = Color(0xFF8FB8C8)
     val colorFondo = Color(0xFFE8EFF5)
-
 
     // ========== CONTENEDOR PRINCIPAL ==========
     Surface(
@@ -76,16 +72,16 @@ fun CheckInOutApp() {
             // ========== SELECCIÓN DE ROL ==========
 
             "seleccionRol" -> SeleccionRolScreen(
-                onRolSeleccionado = { rol ->  // Ahora recibe el rol
-                    rolSeleccionado = rol      // Guarda el rol
-                    pantallaActual = "loginRol" // Navega a login
+                onRolSeleccionado = { rol ->
+                    rolSeleccionado = rol
+                    pantallaActual = "loginRol"
                 },
                 onVolver = { pantallaActual = "login" },
                 colorPrimario = colorPrimario
             )
 
             "loginRol" -> LoginRolScreen(
-                rolSeleccionado = rolSeleccionado,  //  Pasa el rol guardado
+                rolSeleccionado = rolSeleccionado,
                 onLoginExitoso = { pantallaActual = "dashboardAdmin" },
                 onVolver = { pantallaActual = "seleccionRol" },
                 colorPrimario = colorPrimario
@@ -94,8 +90,8 @@ fun CheckInOutApp() {
             // ========== DASHBOARD ADMINISTRATIVO ==========
 
             "dashboardAdmin" -> DashboardAdminScreen(
-                onCerrarSesion = { pantallaActual = "seleccionRol" },  // Vuelve al login
-                onGestionPersonal = {pantallaActual = "gestionPersonal"},
+                onCerrarSesion = { pantallaActual = "seleccionRol" },
+                onGestionPersonal = { pantallaActual = "gestionPersonal" },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
             )
@@ -117,7 +113,7 @@ fun CheckInOutApp() {
             "registrarTrabajador" -> RegistrarTrabajadorScreen(
                 onVolver = { pantallaActual = "gestionPersonal" },
                 onRegistrarBiometrico = { // TODO: Implementar registro biométrico
-                    },
+                },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
             )
@@ -126,14 +122,15 @@ fun CheckInOutApp() {
                 onVolver = { pantallaActual = "gestionPersonal" },
                 onRegistrarPersonal = { pantallaActual = "registrarTrabajador" },
                 onRegistrarBiometrico = { //TODO: Implementar registro biométrico desde listado
-
                 },
-                onVerPerfil = { t ->
-                    trabajadorSeleccionado = t
+                onVerPerfil = { trabajadorCompleto ->
+                    // Recibe TrabajadorCompleto directamente
+                    trabajadorCompletoSeleccionado = trabajadorCompleto
                     pantallaActual = "verPerfil"
                 },
-                onEditarTrabajador = { t ->
-                    trabajadorSeleccionado = t
+                onEditarTrabajador = { trabajadorCompleto ->
+                    // CAMBIADO: Ahora también recibe TrabajadorCompleto
+                    trabajadorCompletoSeleccionado = trabajadorCompleto
                     pantallaActual = "editarTrabajador"
                 },
                 colorPrimario = colorPrimario,
@@ -143,26 +140,32 @@ fun CheckInOutApp() {
             // ========== DETALLE DE TRABAJADOR ==========
 
             "verPerfil" -> {
-                // pantalla simple para ver perfil - mostramos si hay seleccionado, si no volvemos a listado
-                if (trabajadorSeleccionado != null) {
-                    VerPerfilScreen(
-                        trabajador = trabajadorSeleccionado!!,
-                        onVolver = { pantallaActual = "listadoTrabajadores" },
+                // MODIFICADO: Ahora usa TrabajadorCompleto
+                if (trabajadorCompletoSeleccionado != null) {
+                    VerPerfilCompletoScreen(
+                        trabajador = trabajadorCompletoSeleccionado!!,
+                        onVolver = {
+                            trabajadorCompletoSeleccionado = null
+                            pantallaActual = "listadoTrabajadores"
+                        },
                         colorPrimario = colorPrimario
                     )
                 } else {
-                    // si por alguna razón no hay seleccionado, volvemos al listado
                     pantallaActual = "listadoTrabajadores"
                 }
             }
 
             "editarTrabajador" -> {
-                if (trabajadorSeleccionado != null) {
-                    EditarTrabajadorScreen(
-                        trabajador = trabajadorSeleccionado!!,
-                        onVolver = { pantallaActual = "listadoTrabajadores" },
+                if (trabajadorCompletoSeleccionado != null) {
+                    EditarTrabajadorCompletoScreen(
+                        trabajador = trabajadorCompletoSeleccionado!!,
+                        onVolver = {
+                            trabajadorCompletoSeleccionado = null
+                            pantallaActual = "listadoTrabajadores"
+                        },
                         onGuardar = { actualizado ->
-                            trabajadorSeleccionado = actualizado
+                            // Aquí deberías guardar los cambios en tu fuente de datos
+                            trabajadorCompletoSeleccionado = actualizado
                             pantallaActual = "listadoTrabajadores"
                         },
                         colorPrimario = colorPrimario,
@@ -172,7 +175,6 @@ fun CheckInOutApp() {
                     pantallaActual = "listadoTrabajadores"
                 }
             }
-
         }
     }
 }
@@ -189,10 +191,14 @@ fun CheckInOutApp() {
  *    - Agregar un nuevo case en el when()
  *    - Conectar con las callbacks de navegación
  *
+ * CAMBIOS RECIENTES:
+ * - Agregado trabajadorCompletoSeleccionado para manejar datos completos
+ * - Modificado "verPerfil" para usar VerPerfilCompletoScreen
+ * - ListadoTrabajadoresScreen ahora pasa TrabajadorCompleto directamente
+ *
  * FUTURAS MEJORAS:
  * - Migrar a Jetpack Navigation Compose para navegación más robusta
  * - Implementar ViewModel para manejar estados globales
  * - Agregar animaciones de transición entre pantallas
+ * - Implementar carga de datos completos desde base de datos real
  */
-
-

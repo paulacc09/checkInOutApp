@@ -2,23 +2,41 @@ package com.mega.appcheckinout.models
 
 data class TrabajadorCompleto(
     val id: String,
-    val apellido1: String,
-    val apellido2: String,
-    val nombre1: String,
-    val nombre2: String,
-    val tipoDoc: String,
+    // Datos Personales
+    val primerNombre: String,
+    val segundoNombre: String = "",
+    val primerApellido: String,
+    val segundoApellido: String = "",
+    val fechaNacimiento: String,
+    val tipoDocumento: String,
+    val numeroDocumento: String,
+    val telefono: String,
+    val direccion: String,
+
+    // Datos Laborales
     val rol: String,
-    val subCargo: String,
+    val subCargo: String = "",
+    val actividad: String = "",
     val obraAsignada: String,
-    val biometriaRegistrada: Boolean,
-    val estado: String
+    val arl: String,
+    val eps: String,
+    val fechaExamen: String,
+    val fechaCursoAlturas: String,
+
+    // Estado
+    val biometriaRegistrada: Boolean = false,
+    val estado: String = "Activo"
 ) {
-    fun nombreCompleto() = "$apellido1 $apellido2 $nombre1 ${nombre2.takeIf { it.isNotEmpty() } ?: ""}".trim()
+    fun nombreCompleto() = "$primerApellido $segundoApellido $primerNombre $segundoNombre".trim()
+
+    fun nombresCompletos() = "$primerNombre $segundoNombre".trim()
+
+    fun apellidosCompletos() = "$primerApellido $segundoApellido".trim()
 
     fun toTrabajador() = Trabajador(
         id = id,
-        apellidos = "$apellido1 $apellido2",
-        nombres = "$nombre1 ${nombre2.takeIf { it.isNotEmpty() } ?: ""}".trim(),
-        tipoDoc = tipoDoc
+        apellidos = apellidosCompletos(),
+        nombres = nombresCompletos(),
+        tipoDoc = tipoDocumento
     )
 }
