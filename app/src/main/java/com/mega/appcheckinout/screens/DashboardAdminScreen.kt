@@ -25,11 +25,11 @@ import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.ui.theme.BotonAccesoRapido
 import com.mega.appcheckinout.ui.theme.BotonGestion
 
-// ==================== PANTALLA 6: Dashboard Admin ====================
 @Composable
 fun DashboardAdminScreen(
-    onCerrarSesion: () ->Unit,
+    onCerrarSesion: () -> Unit,
     onGestionPersonal: () -> Unit,
+    onReportes: () -> Unit = {}, // Agregado
     colorPrimario: Color,
     colorSecundario: Color
 ) {
@@ -47,7 +47,6 @@ fun DashboardAdminScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Logo pequeÃ±o
             Text(
                 text = "CHECKINOUT",
                 fontSize = 12.sp,
@@ -66,14 +65,13 @@ fun DashboardAdminScreen(
                     painter = painterResource(android.R.drawable.ic_menu_preferences),
                     contentDescription = "Configuración",
                     tint = colorPrimario,
-                    modifier = Modifier.clickable { /* ConfiguraciÃ³n */ }
+                    modifier = Modifier.clickable { /* Configuración */ }
                 )
-                // BotÃ³n de Cerrar SesiÃ³n
                 Icon(
-                    painter = painterResource(android.R.drawable.ic_lock_power_off),  // â† Ãcono de cerrar sesiÃ³n
+                    painter = painterResource(android.R.drawable.ic_lock_power_off),
                     contentDescription = "Cerrar Sesión",
-                    tint = Color.Red,  // â† Color rojo para indicar salida
-                    modifier = Modifier.clickable { onCerrarSesion() }  // â† Ejecuta cerrar sesiÃ³n
+                    tint = Color.Red,
+                    modifier = Modifier.clickable { onCerrarSesion() }
                 )
             }
         }
@@ -85,7 +83,7 @@ fun DashboardAdminScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Accesos RÃ¡pidos
+            // Accesos Rápidos
             Text(
                 text = "ACCESOS RÁPIDOS",
                 fontSize = 20.sp,
@@ -112,7 +110,7 @@ fun DashboardAdminScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // GestiÃ³n
+            // Gestión
             Text(
                 text = "GESTIÓN",
                 fontSize = 20.sp,
@@ -163,9 +161,10 @@ fun DashboardAdminScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     BotonGestion(
-                        texto = "Asistencias y Reportes",
+                        texto = "Reportes y Exportación",
                         colorFondo = colorSecundario,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        onClick = onReportes // Conectado
                     )
                     BotonGestion(
                         texto = "Novedades",

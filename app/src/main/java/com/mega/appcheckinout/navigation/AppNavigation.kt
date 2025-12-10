@@ -5,7 +5,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.mega.appcheckinout.models.Trabajador
 import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.screens.*
 
@@ -19,10 +18,11 @@ import com.mega.appcheckinout.screens.*
  *
  * Flujo de navegación:
  * login → registro/confirmación
- *      → seleccionRol → loginRol → dashboardAdmin → gestionPersonal
+ *      → seleccionRol → loginRol → dashboardAdmin → gestionPersonal → reportes
  *                                                  → registrarTrabajador
  *                                                  → listadoTrabajadores → verPerfil
  *                                                                        → editarTrabajador
+ *                                                  → asignacionesActivas
  */
 @Composable
 fun CheckInOutApp() {
@@ -92,6 +92,7 @@ fun CheckInOutApp() {
             "dashboardAdmin" -> DashboardAdminScreen(
                 onCerrarSesion = { pantallaActual = "seleccionRol" },
                 onGestionPersonal = { pantallaActual = "gestionPersonal" },
+                onReportes = { pantallaActual = "reportes" },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
             )
@@ -101,10 +102,8 @@ fun CheckInOutApp() {
             "gestionPersonal" -> GestionPersonalScreen(
                 onRegistrarNuevo = { pantallaActual = "registrarTrabajador" },
                 onListaTrabajadores = { pantallaActual = "listadoTrabajadores" },
-                onAsignaciones = {  // TODO: Implementar pantalla de asignaciones activas
-                },
-                onReportes = { // TODO: Implementar pantalla de reportes
-                },
+                onAsignaciones = { pantallaActual = "asignacionesActivas" },
+                onReportes = { pantallaActual = "reportes" },
                 onVolver = { pantallaActual = "dashboardAdmin" },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
@@ -112,7 +111,8 @@ fun CheckInOutApp() {
 
             "registrarTrabajador" -> RegistrarTrabajadorScreen(
                 onVolver = { pantallaActual = "gestionPersonal" },
-                onRegistrarBiometrico = { // TODO: Implementar registro biométrico
+                onRegistrarBiometrico = {
+                    // TODO: Implementar registro biométrico
                 },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
@@ -121,15 +121,14 @@ fun CheckInOutApp() {
             "listadoTrabajadores" -> ListadoTrabajadoresScreen(
                 onVolver = { pantallaActual = "gestionPersonal" },
                 onRegistrarPersonal = { pantallaActual = "registrarTrabajador" },
-                onRegistrarBiometrico = { //TODO: Implementar registro biométrico desde listado
+                onRegistrarBiometrico = {
+                    // TODO: Implementar registro biométrico desde listado
                 },
                 onVerPerfil = { trabajadorCompleto ->
-                    // Recibe TrabajadorCompleto directamente
                     trabajadorCompletoSeleccionado = trabajadorCompleto
                     pantallaActual = "verPerfil"
                 },
                 onEditarTrabajador = { trabajadorCompleto ->
-                    // CAMBIADO: Ahora también recibe TrabajadorCompleto
                     trabajadorCompletoSeleccionado = trabajadorCompleto
                     pantallaActual = "editarTrabajador"
                 },
@@ -137,10 +136,34 @@ fun CheckInOutApp() {
                 colorSecundario = colorSecundario
             )
 
+            // ========== ASIGNACIONES ACTIVAS ==========
+
+            "asignacionesActivas" -> AsignacionesActivasScreen(
+                onVolver = { pantallaActual = "gestionPersonal" },
+                onVerPerfil = { trabajadorCompleto ->
+                    trabajadorCompletoSeleccionado = trabajadorCompleto
+                    pantallaActual = "verPerfil"
+                },
+                onAsignarNuevoTrabajador = { obraId ->
+                    // TODO: Implementar asignación directa a obra específica
+                    // Por ahora, ir a registrar trabajador
+                    pantallaActual = "registrarTrabajador"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            // ========== REPORTES Y EXPORTACIÓN ==========
+
+            "reportes" -> ReportesScreen(
+                onVolver = { pantallaActual = "gestionPersonal" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
             // ========== DETALLE DE TRABAJADOR ==========
 
             "verPerfil" -> {
-                // MODIFICADO: Ahora usa TrabajadorCompleto
                 if (trabajadorCompletoSeleccionado != null) {
                     VerPerfilCompletoScreen(
                         trabajador = trabajadorCompletoSeleccionado!!,
@@ -164,7 +187,7 @@ fun CheckInOutApp() {
                             pantallaActual = "listadoTrabajadores"
                         },
                         onGuardar = { actualizado ->
-                            // Aquí deberías guardar los cambios en tu fuente de datos
+                            // TODO: Guardar cambios en la base de datos
                             trabajadorCompletoSeleccionado = actualizado
                             pantallaActual = "listadoTrabajadores"
                         },
@@ -184,7 +207,7 @@ fun CheckInOutApp() {
  *
  * 1. Este archivo SOLO maneja navegación, no lógica de negocio
  * 2. Cada pantalla es responsable de su propia UI y validaciones
- * 3. Los estados (rolSeleccionado, trabajadorSeleccionado) se mantienen aquí
+ * 3. Los estados (rolSeleccionado, trabajadorCompletoSeleccionado) se mantienen aquí
  *    porque necesitan persistir entre navegaciones
  * 4. Para agregar una nueva pantalla:
  *    - Crear el archivo Screen.kt en ui/screens/
@@ -192,13 +215,14 @@ fun CheckInOutApp() {
  *    - Conectar con las callbacks de navegación
  *
  * CAMBIOS RECIENTES:
- * - Agregado trabajadorCompletoSeleccionado para manejar datos completos
- * - Modificado "verPerfil" para usar VerPerfilCompletoScreen
- * - ListadoTrabajadoresScreen ahora pasa TrabajadorCompleto directamente
+ * - Agregada pantalla de Reportes y Exportación
+ * - Conectado desde Dashboard y Gestión Personal
+ * - Corregido flujo de navegación completo
  *
  * FUTURAS MEJORAS:
  * - Migrar a Jetpack Navigation Compose para navegación más robusta
  * - Implementar ViewModel para manejar estados globales
  * - Agregar animaciones de transición entre pantallas
  * - Implementar carga de datos completos desde base de datos real
+ * - Agregar sistema de permisos por rol de usuario
  */
