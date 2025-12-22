@@ -29,6 +29,7 @@ import com.mega.appcheckinout.ui.theme.BotonGestion
 fun DashboardAdminScreen(
     onCerrarSesion: () -> Unit,
     onGestionPersonal: () -> Unit,
+    onGestionObras: () -> Unit = {},
     onReportes: () -> Unit = {}, // Agregado
     colorPrimario: Color,
     colorSecundario: Color
@@ -136,7 +137,8 @@ fun DashboardAdminScreen(
                     BotonGestion(
                         texto = "Gestión de Obras",
                         colorFondo = colorSecundario,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        onClick = onGestionObras
                     )
                 }
 

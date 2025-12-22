@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.screens.*
+import com.mega.appcheckinout.models.Obra
 
 /**
  * CheckInOutApp - Controlador central de navegación de la aplicación
@@ -36,6 +37,11 @@ fun CheckInOutApp() {
 
     // Guarda el trabajador completo para ver el perfil con todos los datos
     var trabajadorCompletoSeleccionado by remember { mutableStateOf<TrabajadorCompleto?>(null) }
+
+    var obraSeleccionada by remember { mutableStateOf<Obra?>(null) }
+
+    var pantallaAnteriorObra by remember { mutableStateOf("listadoObras") }
+
 
     // Colores del tema
     val colorPrimario = Color(0xFF4A6FA5)
@@ -92,6 +98,7 @@ fun CheckInOutApp() {
             "dashboardAdmin" -> DashboardAdminScreen(
                 onCerrarSesion = { pantallaActual = "seleccionRol" },
                 onGestionPersonal = { pantallaActual = "gestionPersonal" },
+                onGestionObras = { pantallaActual = "gestionObras" },
                 onReportes = { pantallaActual = "reportes" },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
@@ -196,6 +203,89 @@ fun CheckInOutApp() {
                     )
                 } else {
                     pantallaActual = "listadoTrabajadores"
+                }
+            }
+
+            "gestionObras" -> GestionObrasScreen(
+                onCrearObra = { pantallaActual = "crearObra" },
+                onListadoObras = { pantallaActual = "listadoObras" },
+                onObrasActivas = { pantallaActual = "obrasActivas" },
+                onObrasFinalizadas = { pantallaActual = "obrasFinalizadas" },
+                onVolver = { pantallaActual = "dashboardAdmin" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "crearObra" -> CrearObraScreen(
+                onVolver = { pantallaActual = "gestionObras" },
+                onObraCreada = {
+                    // Mostrar mensaje de éxito y volver
+                    pantallaActual = "listadoObras"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "listadoObras" -> ListadoObrasScreen(
+                onVolver = { pantallaActual = "gestionObras" },
+                onCrearObra = { pantallaActual = "crearObra" },
+                onVerDetalleObra = { obra ->
+                    obraSeleccionada = obra
+                    pantallaAnteriorObra = "listadoObras"
+                    pantallaActual = "detalleObra"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "obrasActivas" -> ObrasActivasScreen(
+                onVolver = { pantallaActual = "gestionObras" },
+                onVerDetalleObra = { obra ->
+                    obraSeleccionada = obra
+                    pantallaAnteriorObra = "obrasActivas"
+                    pantallaActual = "detalleObra"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "obrasFinalizadas" -> ObrasFinalizadasScreen(
+                onVolver = { pantallaActual = "gestionObras" },
+                onVerDetalleObra = { obra ->
+                    obraSeleccionada = obra
+                    pantallaAnteriorObra = "obrasFinalizadas"
+                    pantallaActual = "detalleObra"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "detalleObra" -> {
+                if (obraSeleccionada != null) {
+                    DetalleObraScreen(
+                        obra = obraSeleccionada!!,
+                        onVolver = {
+                            obraSeleccionada = null
+                            pantallaActual = pantallaAnteriorObra  // ⬅️ Vuelve a donde vino
+                        },
+                        onEditarObra = {
+                            // TODO: Navegar a pantalla de edición
+                        },
+                        onVerTrabajador = { trabajador ->
+                            trabajadorCompletoSeleccionado = trabajador
+                            pantallaActual = "verPerfil"
+                        },
+                        onAsignarTrabajador = {
+                            // TODO: Navegar a asignación de trabajadores
+                        },
+                        onGenerarReporte = {
+                            pantallaActual = "reportes"
+                        },
+                        colorPrimario = colorPrimario,
+                        colorSecundario = colorSecundario
+                    )
+                } else {
+                    pantallaActual = "listadoObras"
                 }
             }
         }
