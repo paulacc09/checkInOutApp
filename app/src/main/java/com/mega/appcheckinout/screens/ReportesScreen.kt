@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.ui.theme.BotonVolver
+import com.mega.appcheckinout.data.DatosEjemplo
 
 /**
  * Pantalla de Reportes y Exportación
@@ -696,60 +697,9 @@ private fun getDescripcionDetallada(tipo: String): String {
 
 private fun generarDatosReporte(tipo: String): List<Any> {
     return when (tipo) {
-        "Asistencia diaria" -> listOf(
-            RegistroAsistencia(
-                trabajador = TrabajadorCompleto(
-                    id = "1",
-                    primerNombre = "Juan",
-                    segundoNombre = "Carlos",
-                    primerApellido = "García",
-                    segundoApellido = "Rodríguez",
-                    fechaNacimiento = "15/03/1990",
-                    tipoDocumento = "Cédula",
-                    numeroDocumento = "1234567890",
-                    telefono = "3001234567",
-                    direccion = "Calle 50 #23-45",
-                    rol = "Operativo",
-                    subCargo = "Latero",
-                    actividad = "Muros",
-                    obraAsignada = "Mandarino - Ibagué",
-                    arl = "Sura",
-                    eps = "Sanitas",
-                    fechaExamen = "01/01/2024",
-                    fechaCursoAlturas = "15/01/2024",
-                    biometriaRegistrada = true,
-                    estado = "Activo"
-                ),
-                fecha = "10/12/2024",
-                horaEntrada = "07:00",
-                horaSalida = "17:00",
-                horasTrabajadas = 9.0
-            )
-        )
-        "Personal activo" -> listOf(
-            TrabajadorCompleto(
-                id = "2",
-                primerNombre = "María",
-                segundoNombre = "Fernanda",
-                primerApellido = "Martínez",
-                segundoApellido = "López",
-                fechaNacimiento = "22/07/1985",
-                tipoDocumento = "Cédula",
-                numeroDocumento = "0987654321",
-                telefono = "3109876543",
-                direccion = "Carrera 10 #15-20",
-                rol = "Inspector SST",
-                subCargo = "",
-                actividad = "",
-                obraAsignada = "Bosque robledal - Rionegro",
-                arl = "Positiva",
-                eps = "Compensar",
-                fechaExamen = "10/02/2024",
-                fechaCursoAlturas = "20/02/2024",
-                biometriaRegistrada = true,
-                estado = "Activo"
-            )
-        )
+        "Asistencia diaria" -> DatosEjemplo.getRegistrosAsistencia()
+        "Personal activo" -> DatosEjemplo.getTrabajadoresActivos()
+        "Asignaciones vigentes" -> DatosEjemplo.asignaciones
         else -> emptyList()
     }
 }

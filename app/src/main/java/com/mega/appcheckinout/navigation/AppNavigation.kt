@@ -1,3 +1,4 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
 package com.mega.appcheckinout.navigation
 
 import androidx.compose.foundation.layout.*
@@ -6,8 +7,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.mega.appcheckinout.models.TrabajadorCompleto
+import com.mega.appcheckinout.models.Usuario
 import com.mega.appcheckinout.screens.*
 import com.mega.appcheckinout.models.Obra
+import com.mega.appcheckinout.screens.detalle.componentes.TabRolesUsuarios
+import com.mega.appcheckinout.screens.detalle.componentes.roles_usuarios.CrearEditarUsuarioScreen
+import com.mega.appcheckinout.screens.detalle.componentes.roles_usuarios.DetalleUsuarioScreen
+import androidx.compose.material3.ExperimentalMaterial3Api
 
 /**
  * CheckInOutApp - Controlador central de navegación de la aplicación
@@ -20,6 +26,8 @@ import com.mega.appcheckinout.models.Obra
  * Flujo de navegación:
  * login → registro/confirmación
  *      → seleccionRol → loginRol → dashboardAdmin → gestionPersonal → reportes
+ *                                                  → gestionObras
+ *                                                  → gestionRolesUsuarios ⬅️ NUEVO
  *                                                  → registrarTrabajador
  *                                                  → listadoTrabajadores → verPerfil
  *                                                                        → editarTrabajador
@@ -38,10 +46,13 @@ fun CheckInOutApp() {
     // Guarda el trabajador completo para ver el perfil con todos los datos
     var trabajadorCompletoSeleccionado by remember { mutableStateOf<TrabajadorCompleto?>(null) }
 
+    // ⬅️ NUEVO: Estado para gestión de usuarios
+    var usuarioSeleccionado by remember { mutableStateOf<Usuario?>(null) }
+    var modoEdicionUsuario by remember { mutableStateOf(false) }
+
     var obraSeleccionada by remember { mutableStateOf<Obra?>(null) }
 
     var pantallaAnteriorObra by remember { mutableStateOf("listadoObras") }
-
 
     // Colores del tema
     val colorPrimario = Color(0xFF4A6FA5)
@@ -99,6 +110,7 @@ fun CheckInOutApp() {
                 onCerrarSesion = { pantallaActual = "seleccionRol" },
                 onGestionPersonal = { pantallaActual = "gestionPersonal" },
                 onGestionObras = { pantallaActual = "gestionObras" },
+                onGestionRolesUsuarios = { pantallaActual = "gestionRolesUsuarios" }, // ⬅️ NUEVO
                 onReportes = { pantallaActual = "reportes" },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
@@ -153,7 +165,6 @@ fun CheckInOutApp() {
                 },
                 onAsignarNuevoTrabajador = { obraId ->
                     // TODO: Implementar asignación directa a obra específica
-                    // Por ahora, ir a registrar trabajador
                     pantallaActual = "registrarTrabajador"
                 },
                 colorPrimario = colorPrimario,
@@ -206,6 +217,8 @@ fun CheckInOutApp() {
                 }
             }
 
+            // ========== GESTIÓN DE OBRAS ==========
+
             "gestionObras" -> GestionObrasScreen(
                 onCrearObra = { pantallaActual = "crearObra" },
                 onListadoObras = { pantallaActual = "listadoObras" },
@@ -219,7 +232,6 @@ fun CheckInOutApp() {
             "crearObra" -> CrearObraScreen(
                 onVolver = { pantallaActual = "gestionObras" },
                 onObraCreada = {
-                    // Mostrar mensaje de éxito y volver
                     pantallaActual = "listadoObras"
                 },
                 colorPrimario = colorPrimario,
@@ -266,7 +278,7 @@ fun CheckInOutApp() {
                         obra = obraSeleccionada!!,
                         onVolver = {
                             obraSeleccionada = null
-                            pantallaActual = pantallaAnteriorObra  // ⬅️ Vuelve a donde vino
+                            pantallaActual = pantallaAnteriorObra
                         },
                         onEditarObra = {
                             // TODO: Navegar a pantalla de edición
@@ -288,6 +300,105 @@ fun CheckInOutApp() {
                     pantallaActual = "listadoObras"
                 }
             }
+
+            // ========== GESTIÓN DE ROLES Y USUARIOS ⬅️ NUEVO ==========
+
+            "gestionRolesUsuarios" -> {
+                // Pantalla con tabs: Usuarios, Roles y Permisos, Sesiones, Auditoría
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = colorFondo
+                ) {
+                    Column {
+                        // Header simple para volver
+                        TopAppBar(
+                            title = { Text("Gestión de Roles y Usuarios") },
+                            navigationIcon = {
+                                androidx.compose.material3.IconButton(
+                                    onClick = { pantallaActual = "dashboardAdmin" }
+                                ) {
+                                    androidx.compose.material3.Icon(
+                                        painter = androidx.compose.ui.res.painterResource(android.R.drawable.ic_menu_revert),
+                                        contentDescription = "Volver"
+                                    )
+                                }
+                            }
+                        )
+
+                        // Componente principal con tabs
+                        TabRolesUsuarios()
+                    }
+                }
+            }
+
+            // Crear nuevo usuario
+            "crearUsuario" -> {
+                CrearEditarUsuarioScreen(
+                    usuario = null, // null = crear nuevo
+                    onGuardar = { nuevoUsuario ->
+                        // TODO: Guardar en base de datos
+                        // Volver a la lista
+                        pantallaActual = "gestionRolesUsuarios"
+                    },
+                    onCancelar = {
+                        pantallaActual = "gestionRolesUsuarios"
+                    }
+                )
+            }
+
+            // Editar usuario existente
+            "editarUsuario" -> {
+                if (usuarioSeleccionado != null) {
+                    CrearEditarUsuarioScreen(
+                        usuario = usuarioSeleccionado,
+                        onGuardar = { usuarioActualizado ->
+                            // TODO: Actualizar en base de datos
+                            usuarioSeleccionado = null
+                            pantallaActual = "gestionRolesUsuarios"
+                        },
+                        onCancelar = {
+                            usuarioSeleccionado = null
+                            pantallaActual = "gestionRolesUsuarios"
+                        }
+                    )
+                } else {
+                    pantallaActual = "gestionRolesUsuarios"
+                }
+            }
+
+            // Ver detalle completo del usuario
+            "detalleUsuario" -> {
+                if (usuarioSeleccionado != null) {
+                    DetalleUsuarioScreen(
+                        usuario = usuarioSeleccionado!!,
+                        onEditar = { usuario ->
+                            usuarioSeleccionado = usuario
+                            pantallaActual = "editarUsuario"
+                        },
+                        onBloquear = { usuario ->
+                            // TODO: Bloquear/desbloquear usuario
+                            // Actualizar estado y recargar
+                        },
+                        onEliminar = { usuario ->
+                            // TODO: Eliminar usuario
+                            usuarioSeleccionado = null
+                            pantallaActual = "gestionRolesUsuarios"
+                        },
+                        onRestablecerContraseña = { usuario ->
+                            // TODO: Generar nueva contraseña y enviar email
+                        },
+                        onCerrarSesiones = { usuario ->
+                            // TODO: Cerrar todas las sesiones del usuario
+                        },
+                        onVolver = {
+                            usuarioSeleccionado = null
+                            pantallaActual = "gestionRolesUsuarios"
+                        }
+                    )
+                } else {
+                    pantallaActual = "gestionRolesUsuarios"
+                }
+            }
         }
     }
 }
@@ -297,17 +408,17 @@ fun CheckInOutApp() {
  *
  * 1. Este archivo SOLO maneja navegación, no lógica de negocio
  * 2. Cada pantalla es responsable de su propia UI y validaciones
- * 3. Los estados (rolSeleccionado, trabajadorCompletoSeleccionado) se mantienen aquí
+ * 3. Los estados (rolSeleccionado, trabajadorCompletoSeleccionado, usuarioSeleccionado) se mantienen aquí
  *    porque necesitan persistir entre navegaciones
  * 4. Para agregar una nueva pantalla:
- *    - Crear el archivo Screen.kt en ui/screens/
+ *    - Crear el archivo Screen.kt en screens/
  *    - Agregar un nuevo case en el when()
  *    - Conectar con las callbacks de navegación
  *
  * CAMBIOS RECIENTES:
- * - Agregada pantalla de Reportes y Exportación
- * - Conectado desde Dashboard y Gestión Personal
- * - Corregido flujo de navegación completo
+ * - Agregado módulo completo de Gestión de Roles y Usuarios
+ * - Conectado desde Dashboard con navegación bidireccional
+ * - Implementadas pantallas: Lista, Crear, Editar, Detalle de usuarios
  *
  * FUTURAS MEJORAS:
  * - Migrar a Jetpack Navigation Compose para navegación más robusta

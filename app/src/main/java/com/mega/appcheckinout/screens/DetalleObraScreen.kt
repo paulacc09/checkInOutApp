@@ -21,6 +21,8 @@ import com.mega.appcheckinout.ui.theme.BotonVolver
 import com.mega.appcheckinout.screens.detalle.TabInformacion
 import com.mega.appcheckinout.screens.detalle.TabTrabajadores
 import com.mega.appcheckinout.screens.detalle.TabEstadisticas
+import com.mega.appcheckinout.data.DatosEjemplo
+
 
 @Composable
 fun DetalleObraScreen(
@@ -38,76 +40,9 @@ fun DetalleObraScreen(
     var tabSeleccionada by remember { mutableStateOf(0) }
 
     // Datos de ejemplo - trabajadores asignados (TODO: Cargar desde base de datos)
-    val trabajadoresAsignados = remember {
+    val trabajadoresAsignados = remember(obra.id) {
         if (obra.estaActiva()) {
-            listOf(
-                TrabajadorCompleto(
-                    id = "1",
-                    primerNombre = "Juan",
-                    segundoNombre = "Carlos",
-                    primerApellido = "Pérez",
-                    segundoApellido = "Gómez",
-                    fechaNacimiento = "15/03/1985",
-                    tipoDocumento = "CC",
-                    numeroDocumento = "1234567890",
-                    telefono = "3001234567",
-                    direccion = "Calle 10 # 5-20, Centro",
-                    rol = "Operario",
-                    subCargo = "Albañil",
-                    actividad = "Construcción",
-                    obraAsignada = obra.id,
-                    arl = "Sura ARL",
-                    eps = "Sura",
-                    fechaExamen = "10/01/2024",
-                    fechaCursoAlturas = "15/01/2024",
-                    biometriaRegistrada = true,
-                    estado = "Activo"
-                ),
-                TrabajadorCompleto(
-                    id = "2",
-                    primerNombre = "María",
-                    segundoNombre = "José",
-                    primerApellido = "Rodríguez",
-                    segundoApellido = "López",
-                    fechaNacimiento = "20/07/1990",
-                    tipoDocumento = "CC",
-                    numeroDocumento = "0987654321",
-                    telefono = "3112345678",
-                    direccion = "Carrera 5 # 12-34, Norte",
-                    rol = "Inspector SST",
-                    subCargo = "Inspector",
-                    actividad = "Seguridad Industrial",
-                    obraAsignada = obra.id,
-                    arl = "Positiva",
-                    eps = "Nueva EPS",
-                    fechaExamen = "01/02/2024",
-                    fechaCursoAlturas = "05/02/2024",
-                    biometriaRegistrada = true,
-                    estado = "Activo"
-                ),
-                TrabajadorCompleto(
-                    id = "3",
-                    primerNombre = "Pedro",
-                    segundoNombre = "",
-                    primerApellido = "Martínez",
-                    segundoApellido = "Silva",
-                    fechaNacimiento = "10/11/1988",
-                    tipoDocumento = "CC",
-                    numeroDocumento = "1122334455",
-                    telefono = "3209876543",
-                    direccion = "Avenida 8 # 20-15",
-                    rol = "Encargado",
-                    subCargo = "Supervisor de Obra",
-                    actividad = "Supervisión",
-                    obraAsignada = obra.id,
-                    arl = "Sura ARL",
-                    eps = "Compensar",
-                    fechaExamen = "05/01/2024",
-                    fechaCursoAlturas = "10/01/2024",
-                    biometriaRegistrada = true,
-                    estado = "Activo"
-                )
-            )
+            DatosEjemplo.getTrabajadoresPorObra(obra.id)
         } else {
             emptyList()
         }

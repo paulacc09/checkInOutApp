@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.ui.theme.BotonVolver
+import com.mega.appcheckinout.data.DatosEjemplo
 
 /**
  * Pantalla para editar todos los datos de un trabajador
@@ -78,11 +79,11 @@ fun EditarTrabajadorCompletoScreen(
     var expandirObra by remember { mutableStateOf(false) }
 
     // Opciones de dropdowns
-    val tiposDocumento = listOf("Cédula", "Tarjeta de identidad", "Pasaporte", "Permiso de protección temporal")
-    val roles = listOf("Encargado", "Inspector SST", "Operativo")
-    val subCargos = listOf("Latero", "Mampostero", "Mulero", "Rematador", "Aseo", "Añadir nuevo subcargo")
-    val actividades = listOf("Muros", "Parqueadero", "Tanque", "Añadir nueva actividad")
-    val obras = listOf("Mandarino - Ibagué", "Bosque robledal - Rionegro", "Hacienda Nakare - Villavicencio", "Pomelo - Bogotá")
+    val tiposDocumento = DatosEjemplo.tiposDocumento
+    val roles = DatosEjemplo.roles
+    val subCargos = DatosEjemplo.subCargos
+    val actividades = DatosEjemplo.actividades
+    val obras = DatosEjemplo.nombresObras
 
     // Validación: al menos subcargo o actividad seleccionados
     val validacionSubcargoActividad = subCargo.isNotBlank() || actividad.isNotBlank()

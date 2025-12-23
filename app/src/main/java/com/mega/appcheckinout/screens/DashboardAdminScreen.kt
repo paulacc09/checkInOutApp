@@ -30,7 +30,8 @@ fun DashboardAdminScreen(
     onCerrarSesion: () -> Unit,
     onGestionPersonal: () -> Unit,
     onGestionObras: () -> Unit = {},
-    onReportes: () -> Unit = {}, // Agregado
+    onGestionRolesUsuarios: () -> Unit = {}, // ⬅️ NUEVO
+    onReportes: () -> Unit = {},
     colorPrimario: Color,
     colorSecundario: Color
 ) {
@@ -149,7 +150,8 @@ fun DashboardAdminScreen(
                     BotonGestion(
                         texto = "Gestión de Roles y Usuarios",
                         colorFondo = colorSecundario,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        onClick = onGestionRolesUsuarios // ⬅️ CONECTADO
                     )
                     BotonGestion(
                         texto = "Gestión de Dispositivos",
@@ -166,7 +168,7 @@ fun DashboardAdminScreen(
                         texto = "Reportes y Exportación",
                         colorFondo = colorSecundario,
                         modifier = Modifier.weight(1f),
-                        onClick = onReportes // Conectado
+                        onClick = onReportes
                     )
                     BotonGestion(
                         texto = "Novedades",

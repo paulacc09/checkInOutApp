@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.ui.theme.BotonVolver
 import java.util.UUID
+import com.mega.appcheckinout.data.DatosEjemplo
 
 @Composable
 fun CrearObraScreen(
@@ -39,10 +40,7 @@ fun CrearObraScreen(
     var mensajeError by remember { mutableStateOf("") }
 
     // Lista de ciudades (puede venir de base de datos)
-    val ciudades = listOf(
-        "Ibagué", "Bogotá", "Medellín", "Cali", "Barranquilla",
-        "Cartagena", "Bucaramanga", "Pereira", "Manizales", "Armenia"
-    )
+    val ciudades = DatosEjemplo.ciudades
 
     Column(
         modifier = Modifier
@@ -109,6 +107,18 @@ fun CrearObraScreen(
                 value = nombre,
                 onValueChange = { nombre = it },
                 label = { Text("Nombre del proyecto *") },
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = colorPrimario,
+                    focusedLabelColor = colorPrimario
+                )
+            )
+
+            // Constructora
+            OutlinedTextField(
+                value = nombre,
+                onValueChange = { nombre = it },
+                label = { Text("Constructora *") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = colorPrimario,

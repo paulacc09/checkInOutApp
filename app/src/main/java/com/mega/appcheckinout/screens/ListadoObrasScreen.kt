@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.Obra
 import com.mega.appcheckinout.ui.theme.BotonVolver
+import com.mega.appcheckinout.data.DatosEjemplo
 
 @Composable
 fun ListadoObrasScreen(
@@ -34,75 +35,7 @@ fun ListadoObrasScreen(
     var filtroCiudad by remember { mutableStateOf("Todas") }
 
     // Datos de ejemplo (TODO: Cargar desde base de datos)
-    val obrasEjemplo = remember {
-        listOf(
-            Obra(
-                id = "1",
-                codigo = "MCJ-001",
-                nombre = "Edificio Mandarino",
-                ciudad = "Ibagué",
-                direccion = "Calle 42 # 5-67",
-                fechaInicio = "15/01/2025",
-                fechaFinEstimada = "15/12/2025",
-                responsableSISO = "María González",
-                descripcion = "Construcción de edificio residencial de 8 pisos",
-                estado = Obra.EstadoObra.ACTIVA,
-                numeroTrabajadores = 45
-            ),
-            Obra(
-                id = "2",
-                codigo = "MCJ-002",
-                nombre = "Conjunto Rionegro",
-                ciudad = "Ibagué",
-                direccion = "Carrera 3 # 12-34",
-                fechaInicio = "10/02/2025",
-                fechaFinEstimada = "10/08/2025",
-                responsableSISO = "Carlos Méndez",
-                descripcion = "Conjunto residencial 120 apartamentos",
-                estado = Obra.EstadoObra.ACTIVA,
-                numeroTrabajadores = 67
-            ),
-            Obra(
-                id = "3",
-                codigo = "MCJ-003",
-                nombre = "Centro Comercial Plaza",
-                ciudad = "Bogotá",
-                direccion = "Avenida 68 # 45-12",
-                fechaInicio = "01/06/2024",
-                fechaFinEstimada = "30/12/2024",
-                responsableSISO = "Ana Rodríguez",
-                descripcion = "Centro comercial 3 pisos",
-                estado = Obra.EstadoObra.FINALIZADA,
-                numeroTrabajadores = 0
-            ),
-            Obra(
-                id = "4",
-                codigo = "MCJ-004",
-                nombre = "Parque Industrial Norte",
-                ciudad = "Medellín",
-                direccion = "Km 5 Autopista Norte",
-                fechaInicio = "20/11/2024",
-                fechaFinEstimada = "20/05/2025",
-                responsableSISO = "Pedro Salazar",
-                descripcion = "Bodegas industriales",
-                estado = Obra.EstadoObra.ACTIVA,
-                numeroTrabajadores = 32
-            ),
-            Obra(
-                id = "5",
-                codigo = "MCJ-005",
-                nombre = "Torres del Bosque",
-                ciudad = "Ibagué",
-                direccion = "Calle 60 # 8-90",
-                fechaInicio = "15/03/2024",
-                fechaFinEstimada = "15/11/2024",
-                responsableSISO = "Laura Jiménez",
-                descripcion = "Dos torres residenciales",
-                estado = Obra.EstadoObra.FINALIZADA,
-                numeroTrabajadores = 0
-            )
-        )
-    }
+    val obrasEjemplo = remember { DatosEjemplo.obras }
 
     // Filtrar obras según búsqueda y filtros
     val obrasFiltradas = remember(textoBusqueda, filtroEstado, filtroCiudad) {
@@ -234,7 +167,7 @@ fun ListadoObrasScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        val ciudades = listOf("Todas", "Ibagué", "Bogotá", "Medellín")
+                        val ciudades = listOf("Todas") + DatosEjemplo.ciudades.distinct()
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp)

@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.Obra
 import com.mega.appcheckinout.ui.theme.BotonVolver
+import com.mega.appcheckinout.data.DatosEjemplo
+
 
 @Composable
 fun ObrasActivasScreen(
@@ -23,49 +25,7 @@ fun ObrasActivasScreen(
     colorSecundario: Color
 ) {
     // Datos de ejemplo - solo obras activas
-    val obrasActivas = remember {
-        listOf(
-            Obra(
-                id = "1",
-                codigo = "MCJ-001",
-                nombre = "Edificio Mandarino",
-                ciudad = "Ibagué",
-                direccion = "Calle 42 # 5-67",
-                fechaInicio = "15/01/2025",
-                fechaFinEstimada = "15/12/2025",
-                responsableSISO = "María González",
-                descripcion = "Construcción de edificio residencial de 8 pisos",
-                estado = Obra.EstadoObra.ACTIVA,
-                numeroTrabajadores = 45
-            ),
-            Obra(
-                id = "2",
-                codigo = "MCJ-002",
-                nombre = "Conjunto Rionegro",
-                ciudad = "Ibagué",
-                direccion = "Carrera 3 # 12-34",
-                fechaInicio = "10/02/2025",
-                fechaFinEstimada = "10/08/2025",
-                responsableSISO = "Carlos Méndez",
-                descripcion = "Conjunto residencial 120 apartamentos",
-                estado = Obra.EstadoObra.ACTIVA,
-                numeroTrabajadores = 67
-            ),
-            Obra(
-                id = "4",
-                codigo = "MCJ-004",
-                nombre = "Parque Industrial Norte",
-                ciudad = "Medellín",
-                direccion = "Km 5 Autopista Norte",
-                fechaInicio = "20/11/2024",
-                fechaFinEstimada = "20/05/2025",
-                responsableSISO = "Pedro Salazar",
-                descripcion = "Bodegas industriales",
-                estado = Obra.EstadoObra.ACTIVA,
-                numeroTrabajadores = 32
-            )
-        )
-    }
+    val obrasActivas = remember { DatosEjemplo.getObrasActivas() }
 
     Column(
         modifier = Modifier

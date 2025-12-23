@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.tarjetas.TarjetaTrabajador
 import com.mega.appcheckinout.ui.theme.BotonVolver
+import com.mega.appcheckinout.data.DatosEjemplo
 
 /**
  * Vista mejorada de listado de trabajadores
@@ -69,169 +70,11 @@ fun ListadoTrabajadoresScreen(
     var mostrarDialogoEliminar by remember { mutableStateOf<TrabajadorCompleto?>(null) }
 
     // Datos de ejemplo
-    val trabajadoresCompletos = remember {
-        listOf(
-            TrabajadorCompleto(
-                id = "1",
-                primerNombre = "Juan",
-                segundoNombre = "Carlos",
-                primerApellido = "García",
-                segundoApellido = "Rodríguez",
-                fechaNacimiento = "15/03/1990",
-                tipoDocumento = "Cédula",
-                numeroDocumento = "1234567890",
-                telefono = "3001234567",
-                direccion = "Calle 50 #23-45, Ibagué",
-                rol = "Operativo",
-                subCargo = "Latero",
-                actividad = "Muros",
-                obraAsignada = "Mandarino - Ibagué",
-                arl = "Sura",
-                eps = "Sanitas",
-                fechaExamen = "01/01/2024",
-                fechaCursoAlturas = "15/01/2024",
-                biometriaRegistrada = true,
-                estado = "Activo"
-            ),
-            TrabajadorCompleto(
-                id = "2",
-                primerNombre = "María",
-                segundoNombre = "Fernanda",
-                primerApellido = "Martínez",
-                segundoApellido = "López",
-                fechaNacimiento = "22/07/1985",
-                tipoDocumento = "Cédula",
-                numeroDocumento = "0987654321",
-                telefono = "3109876543",
-                direccion = "Carrera 10 #15-20, Rionegro",
-                rol = "Inspector SST",
-                subCargo = "",
-                actividad = "",
-                obraAsignada = "Bosque robledal - Rionegro",
-                arl = "Positiva",
-                eps = "Compensar",
-                fechaExamen = "10/02/2024",
-                fechaCursoAlturas = "20/02/2024",
-                biometriaRegistrada = true,
-                estado = "Activo"
-            ),
-            TrabajadorCompleto(
-                id = "3",
-                primerNombre = "Pedro",
-                segundoNombre = "Antonio",
-                primerApellido = "González",
-                segundoApellido = "Pérez",
-                fechaNacimiento = "05/11/1992",
-                tipoDocumento = "Cédula",
-                numeroDocumento = "1122334455",
-                telefono = "3201122334",
-                direccion = "Avenida 30 #12-34, Ibagué",
-                rol = "Operativo",
-                subCargo = "Mampostero",
-                actividad = "Muros",
-                obraAsignada = "Mandarino - Ibagué",
-                arl = "Sura",
-                eps = "Nueva EPS",
-                fechaExamen = "15/03/2024",
-                fechaCursoAlturas = "25/03/2024",
-                biometriaRegistrada = false,
-                estado = "Activo"
-            ),
-            TrabajadorCompleto(
-                id = "4",
-                primerNombre = "Ana",
-                segundoNombre = "María",
-                primerApellido = "Ramírez",
-                segundoApellido = "Torres",
-                fechaNacimiento = "18/09/1988",
-                tipoDocumento = "Cédula",
-                numeroDocumento = "5544332211",
-                telefono = "3155443322",
-                direccion = "Calle 20 #8-15, Villavicencio",
-                rol = "Encargado",
-                subCargo = "",
-                actividad = "",
-                obraAsignada = "Hacienda Nakare - Villavicencio",
-                arl = "Colmena",
-                eps = "Salud Total",
-                fechaExamen = "05/04/2024",
-                fechaCursoAlturas = "12/04/2024",
-                biometriaRegistrada = true,
-                estado = "Activo"
-            ),
-            TrabajadorCompleto(
-                id = "5",
-                primerNombre = "Luis",
-                segundoNombre = "Fernando",
-                primerApellido = "Sánchez",
-                segundoApellido = "Vargas",
-                fechaNacimiento = "30/01/1995",
-                tipoDocumento = "Pasaporte",
-                numeroDocumento = "6677889900",
-                telefono = "3206677889",
-                direccion = "Transversal 5 #40-20, Bogotá",
-                rol = "Operativo",
-                subCargo = "Rematador",
-                actividad = "Parqueadero",
-                obraAsignada = "Pomelo - Bogotá",
-                arl = "Positiva",
-                eps = "Compensar",
-                fechaExamen = "20/04/2024",
-                fechaCursoAlturas = "28/04/2024",
-                biometriaRegistrada = false,
-                estado = "Activo"
-            ),
-            TrabajadorCompleto(
-                id = "6",
-                primerNombre = "Carolina",
-                segundoNombre = "",
-                primerApellido = "Díaz",
-                segundoApellido = "Castro",
-                fechaNacimiento = "12/06/1991",
-                tipoDocumento = "Cédula",
-                numeroDocumento = "9988776655",
-                telefono = "3159988776",
-                direccion = "Diagonal 25 #18-30, Ibagué",
-                rol = "Operativo",
-                subCargo = "Aseo",
-                actividad = "",
-                obraAsignada = "Mandarino - Ibagué",
-                arl = "Sura",
-                eps = "Sanitas",
-                fechaExamen = "01/05/2024",
-                fechaCursoAlturas = "10/05/2024",
-                biometriaRegistrada = true,
-                estado = "Inactivo"
-            ),
-            TrabajadorCompleto(
-                id = "7",
-                primerNombre = "Jorge",
-                segundoNombre = "Andrés",
-                primerApellido = "Morales",
-                segundoApellido = "Ruiz",
-                fechaNacimiento = "25/04/1987",
-                tipoDocumento = "Cédula",
-                numeroDocumento = "3344556677",
-                telefono = "3103344556",
-                direccion = "Carrera 15 #22-10, Rionegro",
-                rol = "Inspector SST",
-                subCargo = "",
-                actividad = "",
-                obraAsignada = "Bosque robledal - Rionegro",
-                arl = "Colmena",
-                eps = "Nueva EPS",
-                fechaExamen = "15/05/2024",
-                fechaCursoAlturas = "22/05/2024",
-                biometriaRegistrada = false,
-                estado = "Activo"
-            )
-        )
-    }
+    val trabajadoresCompletos = remember { DatosEjemplo.trabajadores }
 
     // Opciones para filtros
-    val obras = listOf("Todas", "Mandarino - Ibagué", "Bosque robledal - Rionegro",
-        "Hacienda Nakare - Villavicencio", "Pomelo - Bogotá")
-    val roles = listOf("Todos", "Operativo", "Inspector SST", "Encargado")
+    val obras = listOf("Todas") + DatosEjemplo.nombresObras
+    val roles = listOf("Todos") + DatosEjemplo.roles
     val estadosBiometria = listOf("Todos", "Registrado", "Pendiente")
 
     // Filtrar trabajadores

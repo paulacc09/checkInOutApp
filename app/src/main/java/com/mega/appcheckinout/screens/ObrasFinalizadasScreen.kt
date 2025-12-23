@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.Obra
 import com.mega.appcheckinout.ui.theme.BotonVolver
+import com.mega.appcheckinout.data.DatosEjemplo
 
 @Composable
 fun ObrasFinalizadasScreen(
@@ -23,36 +24,7 @@ fun ObrasFinalizadasScreen(
     colorSecundario: Color
 ) {
     // Datos de ejemplo - solo obras finalizadas
-    val obrasFinalizadas = remember {
-        listOf(
-            Obra(
-                id = "3",
-                codigo = "MCJ-003",
-                nombre = "Centro Comercial Plaza",
-                ciudad = "Bogotá",
-                direccion = "Avenida 68 # 45-12",
-                fechaInicio = "01/06/2024",
-                fechaFinEstimada = "30/12/2024",
-                responsableSISO = "Ana Rodríguez",
-                descripcion = "Centro comercial 3 pisos",
-                estado = Obra.EstadoObra.FINALIZADA,
-                numeroTrabajadores = 0
-            ),
-            Obra(
-                id = "5",
-                codigo = "MCJ-005",
-                nombre = "Torres del Bosque",
-                ciudad = "Ibagué",
-                direccion = "Calle 60 # 8-90",
-                fechaInicio = "15/03/2024",
-                fechaFinEstimada = "15/11/2024",
-                responsableSISO = "Laura Jiménez",
-                descripcion = "Dos torres residenciales",
-                estado = Obra.EstadoObra.FINALIZADA,
-                numeroTrabajadores = 0
-            )
-        )
-    }
+    val obrasFinalizadas = remember { DatosEjemplo.getObrasFinalizadas() }
 
     Column(
         modifier = Modifier
