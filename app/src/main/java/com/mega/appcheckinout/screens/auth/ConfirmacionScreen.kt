@@ -1,4 +1,4 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

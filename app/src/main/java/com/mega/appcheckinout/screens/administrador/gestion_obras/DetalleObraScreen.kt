@@ -1,5 +1,6 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.administrador.gestion_obras
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -185,7 +186,7 @@ fun DetalleObraScreen(
                 // Ubicación
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        painter = painterResource(android.R.drawable.ic_dialog_map),
+                        painter = painterResource(R.drawable.ic_dialog_map),
                         contentDescription = "Ubicación",
                         tint = colorPrimario,
                         modifier = Modifier.size(20.dp)

@@ -1,5 +1,6 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.administrador.gestion_obras
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,7 +72,7 @@ fun ObrasFinalizadasScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = androidx.compose.ui.res.painterResource(android.R.drawable.ic_dialog_info),
+                    painter = painterResource(R.drawable.ic_dialog_info),
                     contentDescription = "Info",
                     tint = Color(0xFFF57C00),
                     modifier = Modifier.size(24.dp)

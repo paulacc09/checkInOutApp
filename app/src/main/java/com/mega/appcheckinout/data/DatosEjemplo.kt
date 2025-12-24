@@ -2,8 +2,8 @@
 package com.mega.appcheckinout.data
 
 import com.mega.appcheckinout.models.*
-import com.mega.appcheckinout.screens.AsignacionObra
-import com.mega.appcheckinout.screens.RegistroAsistencia
+import com.mega.appcheckinout.screens.administrador.gestion_personal.AsignacionObra
+import com.mega.appcheckinout.screens.administrador.reportes.RegistroAsistencia
 
 /**
  * Objeto singleton con todos los datos de ejemplo de la aplicación

@@ -1,16 +1,13 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.administrador.gestion_personal
 
+import android.R
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.models.TrabajadorCompleto
@@ -138,9 +136,9 @@ fun ListadoTrabajadoresScreen(
                         Icon(
                             painter = painterResource(
                                 if (vistaActual == VistaListado.TARJETAS)
-                                    android.R.drawable.ic_menu_view
+                                    R.drawable.ic_menu_view
                                 else
-                                    android.R.drawable.ic_menu_agenda
+                                    R.drawable.ic_menu_agenda
                             ),
                             contentDescription = "Cambiar vista",
                             tint = colorPrimario
@@ -151,7 +149,7 @@ fun ListadoTrabajadoresScreen(
                     Box {
                         IconButton(onClick = { mostrarMenuExportar = !mostrarMenuExportar }) {
                             Icon(
-                                painter = painterResource(android.R.drawable.ic_menu_save),
+                                painter = painterResource(R.drawable.ic_menu_save),
                                 contentDescription = "Exportar",
                                 tint = colorPrimario
                             )
@@ -169,7 +167,7 @@ fun ListadoTrabajadoresScreen(
                                 },
                                 leadingIcon = {
                                     Icon(
-                                        painter = painterResource(android.R.drawable.ic_menu_save),
+                                        painter = painterResource(R.drawable.ic_menu_save),
                                         contentDescription = null
                                     )
                                 }
@@ -182,7 +180,7 @@ fun ListadoTrabajadoresScreen(
                                 },
                                 leadingIcon = {
                                     Icon(
-                                        painter = painterResource(android.R.drawable.ic_menu_save),
+                                        painter = painterResource(R.drawable.ic_menu_save),
                                         contentDescription = null
                                     )
                                 }
@@ -192,7 +190,7 @@ fun ListadoTrabajadoresScreen(
 
                     IconButton(onClick = { mostrarFiltros = !mostrarFiltros }) {
                         Icon(
-                            painter = painterResource(android.R.drawable.ic_menu_sort_by_size),
+                            painter = painterResource(R.drawable.ic_menu_sort_by_size),
                             contentDescription = "Filtros",
                             tint = if (mostrarFiltros) Color(0xFF2196F3) else colorPrimario
                         )
@@ -207,7 +205,7 @@ fun ListadoTrabajadoresScreen(
                 placeholder = { Text("Buscar por nombre o cédula...", fontSize = 14.sp) },
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(android.R.drawable.ic_menu_search),
+                        painter = painterResource(R.drawable.ic_menu_search),
                         contentDescription = null,
                         tint = colorPrimario
                     )
@@ -216,7 +214,7 @@ fun ListadoTrabajadoresScreen(
                     if (textoBusqueda.isNotEmpty()) {
                         IconButton(onClick = { textoBusqueda = "" }) {
                             Icon(
-                                painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel),
+                                painter = painterResource(R.drawable.ic_menu_close_clear_cancel),
                                 contentDescription = "Limpiar",
                                 tint = Color.Gray
                             )
@@ -437,7 +435,7 @@ fun ListadoTrabajadoresScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        painter = painterResource(android.R.drawable.ic_input_add),
+                        painter = painterResource(R.drawable.ic_input_add),
                         contentDescription = "Agregar",
                         tint = Color.White
                     )
@@ -618,7 +616,7 @@ private fun VistaTabla(
 }
 
 @Composable
-private fun EncabezadoTabla(texto: String, ancho: androidx.compose.ui.unit.Dp) {
+private fun EncabezadoTabla(texto: String, ancho: Dp) {
     Box(
         modifier = Modifier
             .width(ancho)
@@ -714,7 +712,7 @@ private fun FilaTrabajador(
                     modifier = Modifier.size(32.dp)
                 ) {
                     Icon(
-                        painter = painterResource(android.R.drawable.ic_menu_view),
+                        painter = painterResource(R.drawable.ic_menu_view),
                         contentDescription = "Ver",
                         tint = colorPrimario,
                         modifier = Modifier.size(18.dp)
@@ -727,7 +725,7 @@ private fun FilaTrabajador(
                     modifier = Modifier.size(32.dp)
                 ) {
                     Icon(
-                        painter = painterResource(android.R.drawable.ic_menu_edit),
+                        painter = painterResource(R.drawable.ic_menu_edit),
                         contentDescription = "Editar",
                         tint = Color(0xFFFF9800),
                         modifier = Modifier.size(18.dp)
@@ -739,7 +737,7 @@ private fun FilaTrabajador(
 }
 
 @Composable
-private fun CeldaTabla(texto: String, ancho: androidx.compose.ui.unit.Dp) {
+private fun CeldaTabla(texto: String, ancho: Dp) {
     Box(
         modifier = Modifier
             .width(ancho)

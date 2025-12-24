@@ -8,12 +8,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.models.Usuario
-import com.mega.appcheckinout.screens.*
 import com.mega.appcheckinout.models.Obra
-import com.mega.appcheckinout.screens.detalle.componentes.TabRolesUsuarios
-import com.mega.appcheckinout.screens.detalle.componentes.roles_usuarios.CrearEditarUsuarioScreen
-import com.mega.appcheckinout.screens.detalle.componentes.roles_usuarios.DetalleUsuarioScreen
+import com.mega.appcheckinout.screens.administrador.roles_usuarios.TabRolesUsuarios
+import com.mega.appcheckinout.screens.administrador.roles_usuarios.CrearEditarUsuarioScreen
+import com.mega.appcheckinout.screens.administrador.roles_usuarios.DetalleUsuarioScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
+import com.mega.appcheckinout.screens.administrador.DashboardAdminScreen
+import com.mega.appcheckinout.screens.administrador.gestion_obras.CrearObraScreen
+import com.mega.appcheckinout.screens.administrador.gestion_obras.DetalleObraScreen
+import com.mega.appcheckinout.screens.administrador.gestion_obras.GestionObrasScreen
+import com.mega.appcheckinout.screens.administrador.gestion_obras.ListadoObrasScreen
+import com.mega.appcheckinout.screens.administrador.gestion_obras.ObrasActivasScreen
+import com.mega.appcheckinout.screens.administrador.gestion_obras.ObrasFinalizadasScreen
+import com.mega.appcheckinout.screens.administrador.gestion_personal.AsignacionesActivasScreen
+import com.mega.appcheckinout.screens.administrador.gestion_personal.EditarTrabajadorCompletoScreen
+import com.mega.appcheckinout.screens.administrador.gestion_personal.GestionPersonalScreen
+import com.mega.appcheckinout.screens.administrador.gestion_personal.ListadoTrabajadoresScreen
+import com.mega.appcheckinout.screens.administrador.gestion_personal.RegistrarTrabajadorScreen
+import com.mega.appcheckinout.screens.administrador.gestion_personal.VerPerfilCompletoScreen
+import com.mega.appcheckinout.screens.administrador.reportes.ReportesScreen
+import com.mega.appcheckinout.screens.auth.ConfirmacionScreen
+import com.mega.appcheckinout.screens.auth.LoginEmpresaScreen
+import com.mega.appcheckinout.screens.auth.LoginRolScreen
+import com.mega.appcheckinout.screens.auth.RegistroEmpresaScreen
+import com.mega.appcheckinout.screens.auth.SeleccionRolScreen
 
 /**
  * CheckInOutApp - Controlador central de navegación de la aplicación

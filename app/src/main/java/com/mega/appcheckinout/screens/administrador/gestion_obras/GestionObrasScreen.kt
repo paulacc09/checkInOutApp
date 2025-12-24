@@ -1,13 +1,17 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.administrador.gestion_obras
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.ui.theme.BotonVolver
@@ -61,32 +65,32 @@ fun GestionObrasScreen(
             verticalArrangement = Arrangement.Center
         ) {
             // Botón 1: Crear nueva obra
-            androidx.compose.material3.Button(
+            Button(
                 onClick = onCrearObra,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                colors = ButtonDefaults.buttonColors(
                     containerColor = colorSecundario
                 ),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(16.dp)
             ) {
                 Text(
                     text = "Crear nueva obra",
                     fontSize = 16.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center
                 )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             // Botón 2: Listado de todas las obras
-            androidx.compose.material3.Button(
+            Button(
                 onClick = onListadoObras,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                colors = ButtonDefaults.buttonColors(
                     containerColor = colorSecundario
                 ),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
@@ -94,19 +98,19 @@ fun GestionObrasScreen(
                 Text(
                     text = "Listado de obras",
                     fontSize = 16.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center
                 )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             // Botón 3: Obras activas
-            androidx.compose.material3.Button(
+            Button(
                 onClick = onObrasActivas,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                colors = ButtonDefaults.buttonColors(
                     containerColor = colorSecundario
                 ),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
@@ -114,19 +118,19 @@ fun GestionObrasScreen(
                 Text(
                     text = "Obras activas",
                     fontSize = 16.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center
                 )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
             // Botón 4: Obras finalizadas
-            androidx.compose.material3.Button(
+            Button(
                 onClick = onObrasFinalizadas,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp),
-                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                colors = ButtonDefaults.buttonColors(
                     containerColor = colorSecundario
                 ),
                 shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
@@ -134,7 +138,7 @@ fun GestionObrasScreen(
                 Text(
                     text = "Obras finalizadas",
                     fontSize = 16.sp,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center
                 )
             }
         }

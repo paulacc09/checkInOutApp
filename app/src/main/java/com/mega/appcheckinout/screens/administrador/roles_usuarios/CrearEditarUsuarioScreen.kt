@@ -1,5 +1,6 @@
-package com.mega.appcheckinout.screens.detalle.componentes.roles_usuarios
+package com.mega.appcheckinout.screens.administrador.roles_usuarios
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -361,7 +362,7 @@ fun CrearEditarUsuarioScreen(
                                 }
                             ),
                             border = if (rolSeleccionado == rol) {
-                                androidx.compose.foundation.BorderStroke(
+                                BorderStroke(
                                     2.dp,
                                     when (rol) {
                                         RolUsuario.ADMINISTRADOR -> Color(0xFF6200EE)
@@ -542,7 +543,7 @@ fun CrearEditarUsuarioScreen(
                                     }
                                 ),
                                 border = if (estadoUsuario == estado) {
-                                    androidx.compose.foundation.BorderStroke(
+                                    BorderStroke(
                                         2.dp,
                                         when (estado) {
                                             EstadoUsuario.ACTIVO -> Color(0xFF4CAF50)

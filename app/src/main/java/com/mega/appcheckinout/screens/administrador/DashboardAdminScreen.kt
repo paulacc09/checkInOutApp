@@ -1,5 +1,6 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.administrador
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,19 +59,19 @@ fun DashboardAdminScreen(
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Icon(
-                    painter = painterResource(android.R.drawable.ic_menu_info_details),
+                    painter = painterResource(R.drawable.ic_menu_info_details),
                     contentDescription = "Info",
                     tint = colorPrimario,
                     modifier = Modifier.clickable { /* Info */ }
                 )
                 Icon(
-                    painter = painterResource(android.R.drawable.ic_menu_preferences),
+                    painter = painterResource(R.drawable.ic_menu_preferences),
                     contentDescription = "Configuración",
                     tint = colorPrimario,
                     modifier = Modifier.clickable { /* Configuración */ }
                 )
                 Icon(
-                    painter = painterResource(android.R.drawable.ic_lock_power_off),
+                    painter = painterResource(R.drawable.ic_lock_power_off),
                     contentDescription = "Cerrar Sesión",
                     tint = Color.Red,
                     modifier = Modifier.clickable { onCerrarSesion() }

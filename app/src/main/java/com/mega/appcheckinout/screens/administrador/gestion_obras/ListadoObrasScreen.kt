@@ -1,5 +1,6 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.administrador.gestion_obras
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -232,7 +234,7 @@ fun ListadoObrasScreen(
                 containerColor = colorPrimario
             ) {
                 Icon(
-                    painter = androidx.compose.ui.res.painterResource(android.R.drawable.ic_input_add),
+                    painter = painterResource(R.drawable.ic_input_add),
                     contentDescription = "Crear obra",
                     tint = Color.White
                 )
@@ -308,7 +310,7 @@ fun TarjetaObra(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    painter = androidx.compose.ui.res.painterResource(android.R.drawable.ic_dialog_map),
+                    painter = painterResource(R.drawable.ic_dialog_map),
                     contentDescription = "Ubicación",
                     tint = colorPrimario,
                     modifier = Modifier.size(16.dp)
@@ -394,7 +396,7 @@ fun TarjetaObra(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                painter = androidx.compose.ui.res.painterResource(android.R.drawable.ic_menu_myplaces),
+                                painter = painterResource(R.drawable.ic_menu_myplaces),
                                 contentDescription = "Trabajadores",
                                 tint = Color.White,
                                 modifier = Modifier.size(16.dp)

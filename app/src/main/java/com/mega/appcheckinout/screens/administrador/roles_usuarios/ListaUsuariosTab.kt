@@ -1,4 +1,4 @@
-package com.mega.appcheckinout.screens.detalle.componentes.roles_usuarios
+package com.mega.appcheckinout.screens.administrador.roles_usuarios
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

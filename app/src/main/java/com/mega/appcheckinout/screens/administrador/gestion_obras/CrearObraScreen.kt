@@ -1,5 +1,6 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.administrador.gestion_obras
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -140,8 +141,8 @@ fun CrearObraScreen(
                         IconButton(onClick = { expandedCiudad = !expandedCiudad }) {
                             Icon(
                                 painter = painterResource(
-                                    if (expandedCiudad) android.R.drawable.arrow_up_float
-                                    else android.R.drawable.arrow_down_float
+                                    if (expandedCiudad) R.drawable.arrow_up_float
+                                    else R.drawable.arrow_down_float
                                 ),
                                 contentDescription = "Seleccionar ciudad"
                             )

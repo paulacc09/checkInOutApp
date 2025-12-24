@@ -1,4 +1,4 @@
-package com.mega.appcheckinout.screens.detalle.componentes.roles_usuarios
+package com.mega.appcheckinout.screens.administrador.roles_usuarios
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,7 +18,6 @@ import com.mega.appcheckinout.models.TipoAccion
 import java.text.SimpleDateFormat
 import java.util.*
 import com.mega.appcheckinout.data.DatosEjemplo
-import androidx.compose.ui.res.painterResource
 
 
 @OptIn(ExperimentalMaterial3Api::class)

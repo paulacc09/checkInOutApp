@@ -1,4 +1,4 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.administrador.gestion_personal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -33,43 +33,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.ui.theme.BotonVolver
 import com.mega.appcheckinout.data.DatosEjemplo
 
-/**
- * Pantalla para editar todos los datos de un trabajador
- * Similar a RegistrarTrabajadorScreen pero con datos precargados
- */
-@OptIn(ExperimentalMaterial3Api::class)
+// ==================== PANTALLA 8: Registrar Nuevo Trabajador ====================
+@OptIn(ExperimentalMaterial3Api::class)  // â† IMPORTANTE: Agregar esto
 @Composable
-fun EditarTrabajadorCompletoScreen(
-    trabajador: TrabajadorCompleto,
+fun RegistrarTrabajadorScreen(
     onVolver: () -> Unit,
-    onGuardar: (TrabajadorCompleto) -> Unit,
+    onRegistrarBiometrico: () -> Unit,
     colorPrimario: Color,
     colorSecundario: Color
 ) {
-    // Estados del formulario - Datos Personales (precargados)
-    var primerNombre by remember { mutableStateOf(trabajador.primerNombre) }
-    var segundoNombre by remember { mutableStateOf(trabajador.segundoNombre) }
-    var primerApellido by remember { mutableStateOf(trabajador.primerApellido) }
-    var segundoApellido by remember { mutableStateOf(trabajador.segundoApellido) }
-    var fechaNacimiento by remember { mutableStateOf(trabajador.fechaNacimiento) }
-    var tipoDocumento by remember { mutableStateOf(trabajador.tipoDocumento) }
-    var numeroDocumento by remember { mutableStateOf(trabajador.numeroDocumento) }
-    var telefono by remember { mutableStateOf(trabajador.telefono) }
-    var direccion by remember { mutableStateOf(trabajador.direccion) }
+    // Estados del formulario - Datos Personales
+    var primerNombre by remember { mutableStateOf("") }
+    var segundoNombre by remember { mutableStateOf("") }
+    var primerApellido by remember { mutableStateOf("") }
+    var segundoApellido by remember { mutableStateOf("") }
+    var fechaNacimiento by remember { mutableStateOf("") }
+    var tipoDocumento by remember { mutableStateOf("") }
+    var numeroDocumento by remember { mutableStateOf("") }
+    var telefono by remember { mutableStateOf("") }
+    var direccion by remember { mutableStateOf("") }
 
-    // Estados del formulario - Datos Laborales (precargados)
-    var rol by remember { mutableStateOf(trabajador.rol) }
-    var subCargo by remember { mutableStateOf(trabajador.subCargo) }
-    var actividad by remember { mutableStateOf(trabajador.actividad) }
-    var obraAsignada by remember { mutableStateOf(trabajador.obraAsignada) }
-    var arl by remember { mutableStateOf(trabajador.arl) }
-    var eps by remember { mutableStateOf(trabajador.eps) }
-    var fechaExamen by remember { mutableStateOf(trabajador.fechaExamen) }
-    var fechaCursoAlturas by remember { mutableStateOf(trabajador.fechaCursoAlturas) }
+    // Estados del formulario - Datos Laborales
+    var rol by remember { mutableStateOf("") }
+    var subCargo by remember { mutableStateOf("") }
+    var actividad by remember { mutableStateOf("") }
+    var obraAsignada by remember { mutableStateOf("") }
+    var arl by remember { mutableStateOf("") }
+    var eps by remember { mutableStateOf("") }
+    var fechaExamen by remember { mutableStateOf("") }
+    var fechaCursoAlturas by remember { mutableStateOf("") }
 
     // Estados para dropdowns expandidos
     var expandirTipoDoc by remember { mutableStateOf(false) }
@@ -85,10 +80,10 @@ fun EditarTrabajadorCompletoScreen(
     val actividades = DatosEjemplo.actividades
     val obras = DatosEjemplo.nombresObras
 
-    // Validación: al menos subcargo o actividad seleccionados
+    // ValidaciÃ³n: al menos subcargo o actividad seleccionados
     val validacionSubcargoActividad = subCargo.isNotBlank() || actividad.isNotBlank()
 
-    // Validación completa del formulario
+    // ValidaciÃ³n completa del formulario
     val formularioValido = primerNombre.isNotBlank() &&
             primerApellido.isNotBlank() &&
             fechaNacimiento.isNotBlank() &&
@@ -125,7 +120,7 @@ fun EditarTrabajadorCompletoScreen(
             )
 
             Text(
-                text = "EDITAR TRABAJADOR",
+                text = "REGISTRAR NUEVO TRABAJADOR",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorPrimario
@@ -310,6 +305,10 @@ fun EditarTrabajadorCompletoScreen(
 
             // DATOS LABORALES
             Text(
+
+
+
+
                 text = "Datos laborales",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
@@ -429,8 +428,8 @@ fun EditarTrabajadorCompletoScreen(
                 }
             }
 
-            // Mensaje de validación subcargo/actividad
-            if (!validacionSubcargoActividad) {
+            // Mensaje de validaciÃ³n subcargo/actividad
+            if (!validacionSubcargoActividad && (subCargo.isBlank() && actividad.isBlank())) {
                 Text(
                     text = "* Debe seleccionar al menos Sub Cargo o Actividad",
                     color = Color.Red,
@@ -537,40 +536,51 @@ fun EditarTrabajadorCompletoScreen(
                 singleLine = true
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // CONFIGURACIÃ“N DE MARCAJE
+            Text(
+                text = "Configuración de Marcaje",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = colorPrimario,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            OutlinedTextField(
+                value = numeroDocumento,
+                onValueChange = {},
+                label = { Text("Número de Documento") },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = false,
+                colors = OutlinedTextFieldDefaults.colors(
+                    disabledBorderColor = Color.Gray,
+                    disabledLabelColor = Color.Gray
+                )
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = onRegistrarBiometrico,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = colorSecundario),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("Registrar Biométrico")
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Botón Guardar Cambios
+            // BotÃ³n Guardar
             Button(
-                onClick = {
-                    val trabajadorActualizado = trabajador.copy(
-                        primerNombre = primerNombre,
-                        segundoNombre = segundoNombre,
-                        primerApellido = primerApellido,
-                        segundoApellido = segundoApellido,
-                        fechaNacimiento = fechaNacimiento,
-                        tipoDocumento = tipoDocumento,
-                        numeroDocumento = numeroDocumento,
-                        telefono = telefono,
-                        direccion = direccion,
-                        rol = rol,
-                        subCargo = subCargo,
-                        actividad = actividad,
-                        obraAsignada = obraAsignada,
-                        arl = arl,
-                        eps = eps,
-                        fechaExamen = fechaExamen,
-                        fechaCursoAlturas = fechaCursoAlturas
-                    )
-                    onGuardar(trabajadorActualizado)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp),
+                onClick = { /* Guardar trabajador */ },
+                modifier = Modifier.fillMaxWidth().height(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = colorPrimario),
                 shape = RoundedCornerShape(8.dp),
                 enabled = formularioValido
             ) {
-                Text("Guardar Cambios", fontSize = 16.sp)
+                Text("Guardar Trabajador", fontSize = 16.sp)
             }
 
             Spacer(modifier = Modifier.height(24.dp))

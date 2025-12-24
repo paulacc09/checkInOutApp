@@ -1,4 +1,4 @@
-package com.mega.appcheckinout.screens
+package com.mega.appcheckinout.screens.administrador.gestion_personal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -1,11 +1,10 @@
-package com.mega.appcheckinout.screens.detalle.componentes
+package com.mega.appcheckinout.screens.administrador.roles_usuarios
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mega.appcheckinout.screens.detalle.componentes.roles_usuarios.*
 
 @Composable
 fun TabRolesUsuarios() {

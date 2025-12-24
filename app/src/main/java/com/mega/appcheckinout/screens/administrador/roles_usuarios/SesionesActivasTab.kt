@@ -1,4 +1,4 @@
-package com.mega.appcheckinout.screens.detalle.componentes.roles_usuarios
+package com.mega.appcheckinout.screens.administrador.roles_usuarios
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mega.appcheckinout.models.RolUsuario
@@ -311,7 +312,7 @@ fun TarjetaSesionActiva(
 
 @Composable
 fun InfoSesion(
-    icono: androidx.compose.ui.graphics.vector.ImageVector,
+    icono: ImageVector,
     etiqueta: String,
     valor: String,
     color: Color? = null
