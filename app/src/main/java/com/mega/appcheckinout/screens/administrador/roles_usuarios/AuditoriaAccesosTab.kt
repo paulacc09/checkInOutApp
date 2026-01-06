@@ -18,11 +18,13 @@ import com.mega.appcheckinout.models.TipoAccion
 import java.text.SimpleDateFormat
 import java.util.*
 import com.mega.appcheckinout.data.DatosEjemplo
+import androidx.compose.foundation.background
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuditoriaAccesosTab() {
+fun AuditoriaAccesosTab(colorPrimario: Color = Color(0xFF4A6FA5)) {
     var fechaInicio by remember { mutableStateOf<Long?>(null) }
     var fechaFin by remember { mutableStateOf<Long?>(null) }
     var usuarioFiltro by remember { mutableStateOf("") }
@@ -37,7 +39,12 @@ fun AuditoriaAccesosTab() {
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFE8EFF5))
+            .padding(16.dp)
+    ) {
         // Encabezado
         Row(
             modifier = Modifier

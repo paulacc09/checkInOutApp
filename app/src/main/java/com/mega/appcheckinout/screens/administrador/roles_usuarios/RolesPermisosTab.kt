@@ -22,11 +22,13 @@ import com.mega.appcheckinout.models.MatrizPermisos
 import com.mega.appcheckinout.models.RolUsuario
 
 @Composable
-fun RolesPermisosTab() {
+fun RolesPermisosTab(colorPrimario: Color = Color(0xFF4A6FA5)) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color(0xFFE8EFF5))
             .verticalScroll(rememberScrollState())
+            .padding(16.dp)
     ) {
         // Encabezado
         Text(

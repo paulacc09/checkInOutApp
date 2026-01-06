@@ -17,10 +17,16 @@ import com.mega.appcheckinout.models.*
 import java.text.SimpleDateFormat
 import java.util.*
 import com.mega.appcheckinout.data.DatosEjemplo
+import androidx.compose.foundation.background
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListaUsuariosTab() {
+fun ListaUsuariosTab(
+    colorPrimario: Color = Color(0xFF4A6FA5),
+    colorSecundario: Color = Color(0xFF8FB8C8)
+) {
+    // Estados para búsqueda y filtros
     var busqueda by remember { mutableStateOf("") }
     var filtroRol by remember { mutableStateOf<RolUsuario?>(null) }
     var filtroEstado by remember { mutableStateOf<EstadoUsuario?>(null) }
@@ -34,7 +40,12 @@ fun ListaUsuariosTab() {
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFE8EFF5))
+            .padding(16.dp)
+    ) {
         // Barra de búsqueda y filtros
         Row(
             modifier = Modifier

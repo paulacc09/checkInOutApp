@@ -18,13 +18,16 @@ import com.mega.appcheckinout.models.SesionActiva
 import java.text.SimpleDateFormat
 import java.util.*
 import com.mega.appcheckinout.data.DatosEjemplo
+import androidx.compose.foundation.background
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SesionesActivasTab() {
+fun SesionesActivasTab(colorPrimario: Color = Color(0xFF4A6FA5)) {
     var filtroRol by remember { mutableStateOf<RolUsuario?>(null) }
     var filtroDispositivo by remember { mutableStateOf<String?>(null) }
-    var mostrarDialogoConfirmacion by remember { mutableStateOf<SesionActiva?>(null) }
+    var mostrarDialogoConfirmacion by remember {
+        mutableStateOf<SesionActiva?>(null) }
 
     // Lista de sesiones activas (en producción vendría del backend)
     val sesionesActivas = remember {
@@ -33,7 +36,12 @@ fun SesionesActivasTab() {
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFE8EFF5))
+            .padding(16.dp)
+    ) {
         // Encabezado con contador
         Row(
             modifier = Modifier

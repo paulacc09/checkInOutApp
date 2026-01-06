@@ -9,7 +9,8 @@ import androidx.compose.ui.graphics.Color
 import com.mega.appcheckinout.models.TrabajadorCompleto
 import com.mega.appcheckinout.models.Usuario
 import com.mega.appcheckinout.models.Obra
-import com.mega.appcheckinout.screens.administrador.roles_usuarios.TabRolesUsuarios
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import com.mega.appcheckinout.screens.administrador.roles_usuarios.CrearEditarUsuarioScreen
 import com.mega.appcheckinout.screens.administrador.roles_usuarios.DetalleUsuarioScreen
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +33,13 @@ import com.mega.appcheckinout.screens.auth.LoginEmpresaScreen
 import com.mega.appcheckinout.screens.auth.LoginRolScreen
 import com.mega.appcheckinout.screens.auth.RegistroEmpresaScreen
 import com.mega.appcheckinout.screens.auth.SeleccionRolScreen
+import androidx.compose.foundation.background
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.Alignment
+import com.mega.appcheckinout.ui.theme.BotonVolver
+import com.mega.appcheckinout.screens.administrador.*
+import com.mega.appcheckinout.screens.detalle.componentes.TabRolesUsuarios
 
 /**
  * CheckInOutApp - Controlador central de navegación de la aplicación
@@ -319,33 +327,42 @@ fun CheckInOutApp() {
                 }
             }
 
-            // ========== GESTIÓN DE ROLES Y USUARIOS ⬅️ NUEVO ==========
-
+            // ========== GESTIÓN DE ROLES Y USUARIOS NUEVO ==========
             "gestionRolesUsuarios" -> {
-                // Pantalla con tabs: Usuarios, Roles y Permisos, Sesiones, Auditoría
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = colorFondo
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFE8EFF5))
                 ) {
-                    Column {
-                        // Header simple para volver
-                        TopAppBar(
-                            title = { Text("Gestión de Roles y Usuarios") },
-                            navigationIcon = {
-                                androidx.compose.material3.IconButton(
-                                    onClick = { pantallaActual = "dashboardAdmin" }
-                                ) {
-                                    androidx.compose.material3.Icon(
-                                        painter = androidx.compose.ui.res.painterResource(android.R.drawable.ic_menu_revert),
-                                        contentDescription = "Volver"
-                                    )
-                                }
-                            }
+                    // Header consistente con el resto de la app
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFFB8D4E3))
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        BotonVolver(
+                            onClick = { pantallaActual = "dashboardAdmin" },
+                            colorIcono = Color.White,
+                            colorFondo = colorPrimario
                         )
 
-                        // Componente principal con tabs
-                        TabRolesUsuarios()
+                        Text(
+                            text = "GESTIÓN DE ROLES Y USUARIOS",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorPrimario,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.width(48.dp))
                     }
+
+                    // Componente principal con tabs
+                    TabRolesUsuarios(colorPrimario, colorSecundario)
                 }
             }
 
