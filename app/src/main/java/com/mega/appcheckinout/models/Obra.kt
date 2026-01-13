@@ -37,24 +37,3 @@ data class EstadisticasObra(
     val asistenciaHoy: Int = 0,
     val novedadesPendientes: Int = 0
 )
-
-data class Dispositivo(
-    val id: String,
-    val nombre: String,
-    val tipo: TipoDispositivo,
-    val estado: EstadoDispositivo,
-    val obraAsignada: String,
-    val responsable: String
-) {
-    enum class TipoDispositivo {
-        TABLET,
-        TELEFONO,
-        LECTOR_BIOMETRICO
-    }
-
-    enum class EstadoDispositivo {
-        ACTIVO,
-        INACTIVO,
-        BLOQUEADO
-    }
-}

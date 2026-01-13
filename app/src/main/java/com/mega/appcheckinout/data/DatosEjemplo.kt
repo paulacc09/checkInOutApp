@@ -5,6 +5,7 @@ import com.mega.appcheckinout.models.*
 import com.mega.appcheckinout.screens.administrador.gestion_personal.AsignacionObra
 import com.mega.appcheckinout.screens.administrador.reportes.RegistroAsistencia
 
+
 /**
  * Objeto singleton con todos los datos de ejemplo de la aplicación
  *
@@ -439,7 +440,221 @@ object DatosEjemplo {
                 observaciones = ""
             )
         )
+
+
+
     }
+
+    // ==================== NOVEDADES ====================
+    val novedades = listOf(
+        Novedad(
+            id = "1",
+            trabajadorId = "1",
+            trabajadorNombre = "Juan Carlos García Rodríguez",
+            tipoNovedad = TipoNovedad.INCAPACIDAD_EPS,
+            fechaInicio = "01/01/2025",
+            fechaFin = "03/01/2025",
+            descripcion = "Incapacidad por gripe. Reposo de 3 días.",
+            evidencias = listOf(
+                Evidencia(
+                    id = "1",
+                    nombre = "incapacidad_medica.pdf",
+                    tipo = TipoEvidencia.PDF,
+                    url = "https://example.com/doc1.pdf"
+                )
+            ),
+            estado = EstadoNovedad.APROBADO,
+            creadoPor = "María Martínez (Inspector SST)",
+            revisadoPor = "Admin Principal",
+            fechaRevision = System.currentTimeMillis() - 86400000,
+            obraId = "1"
+        ),
+        Novedad(
+            id = "2",
+            trabajadorId = "3",
+            trabajadorNombre = "Pedro Antonio González Pérez",
+            tipoNovedad = TipoNovedad.PERMISO,
+            fechaInicio = "05/01/2025",
+            fechaFin = "05/01/2025",
+            descripcion = "Permiso por diligencia personal urgente",
+            evidencias = emptyList(),
+            estado = EstadoNovedad.PENDIENTE,
+            creadoPor = "Ana Ramírez (Encargado)",
+            obraId = "1"
+        ),
+        Novedad(
+            id = "3",
+            trabajadorId = "4",
+            trabajadorNombre = "Ana María Ramírez Torres",
+            tipoNovedad = TipoNovedad.LICENCIA,
+            fechaInicio = "10/01/2025",
+            fechaFin = "12/01/2025",
+            descripcion = "Licencia por calamidad familiar",
+            evidencias = listOf(
+                Evidencia(
+                    id = "2",
+                    nombre = "certificado_defuncion.pdf",
+                    tipo = TipoEvidencia.PDF,
+                    url = "https://example.com/doc2.pdf"
+                )
+            ),
+            estado = EstadoNovedad.APROBADO,
+            creadoPor = "María Martínez (Inspector SST)",
+            revisadoPor = "Admin Principal",
+            fechaRevision = System.currentTimeMillis() - 172800000,
+            obraId = "3"
+        ),
+        Novedad(
+            id = "4",
+            trabajadorId = "5",
+            trabajadorNombre = "Luis Fernando Sánchez Vargas",
+            tipoNovedad = TipoNovedad.INCAPACIDAD_ARL,
+            fechaInicio = "28/12/2024",
+            fechaFin = "02/01/2025",
+            descripcion = "Accidente laboral menor - lesión en mano",
+            evidencias = listOf(
+                Evidencia(
+                    id = "3",
+                    nombre = "informe_arl.pdf",
+                    tipo = TipoEvidencia.PDF,
+                    url = "https://example.com/doc3.pdf"
+                ),
+                Evidencia(
+                    id = "4",
+                    nombre = "foto_lesion.jpg",
+                    tipo = TipoEvidencia.IMAGEN,
+                    url = "https://example.com/img1.jpg"
+                )
+            ),
+            estado = EstadoNovedad.RECHAZADO,
+            creadoPor = "Jorge Morales (Inspector SST)",
+            revisadoPor = "Admin Principal",
+            fechaRevision = System.currentTimeMillis() - 259200000,
+            motivoRechazo = "Documentación incompleta. Falta firma del médico tratante.",
+            obraId = "4"
+        )
+    )
+
+    // ==================== DISPOSITIVOS ====================
+    val dispositivos = listOf(
+        Dispositivo(
+            id = "1",
+            nombre = "Tablet Obra Mandarino",
+            tipo = TipoDispositivo.TABLET,
+            obraId = "1",
+            obraNombre = "Edificio Mandarino",
+            responsableId = "2",
+            responsableNombre = "María González (Inspector SST)",
+            metodosHabilitados = listOf(
+                MetodoMarcaje.CEDULA,
+                MetodoMarcaje.QR,
+                MetodoMarcaje.BIOMETRIA
+            ),
+            estado = EstadoDispositivo.ACTIVO,
+            fechaRegistro = System.currentTimeMillis() - 2592000000, // Hace 30 días
+            ultimoUso = System.currentTimeMillis() - 3600000
+
+        ),
+        Dispositivo(
+            id = "2",
+            nombre = "Teléfono Rionegro",
+            tipo = TipoDispositivo.TELEFONO,
+            obraId = "2",
+            obraNombre = "Conjunto Rionegro",
+            responsableId = "3",
+            responsableNombre = "Carlos Méndez (Encargado)",
+            metodosHabilitados = listOf(
+                MetodoMarcaje.CEDULA,
+                MetodoMarcaje.QR
+            ),
+            estado = EstadoDispositivo.ACTIVO,
+            fechaRegistro = System.currentTimeMillis() - 1814400000, // Hace 21 días
+            ultimoUso = System.currentTimeMillis() - 7200000
+        ),
+        Dispositivo(
+            id = "3",
+            nombre = "Lector Biométrico Mandarino",
+            tipo = TipoDispositivo.BIOMETRICO,
+            obraId = "1",
+            obraNombre = "Edificio Mandarino",
+            responsableId = "2",
+            responsableNombre = "María González (Inspector SST)",
+            metodosHabilitados = listOf(MetodoMarcaje.BIOMETRIA),
+            estado = EstadoDispositivo.ACTIVO,
+            fechaRegistro = System.currentTimeMillis() - 2592000000, // Hace 30 días
+            ultimoUso = System.currentTimeMillis() - 1800000
+        ),
+        Dispositivo(
+            id = "4",
+            nombre = "Tablet Plaza (Inactiva)",
+            tipo = TipoDispositivo.TABLET,
+            obraId = "3",
+            obraNombre = "Centro Comercial Plaza",
+            responsableId = "4",
+            responsableNombre = "Ana Rodríguez (Inspector SST)",
+            metodosHabilitados = listOf(
+                MetodoMarcaje.CEDULA,
+                MetodoMarcaje.QR
+            ),
+            estado = EstadoDispositivo.INACTIVO,
+            fechaRegistro = System.currentTimeMillis() - 5184000000 // Hace 60 días
+        ),
+        Dispositivo(
+            id = "5",
+            nombre = "Tablet Norte (BLOQUEADA)",
+            tipo = TipoDispositivo.TABLET,
+            obraId = "4",
+            obraNombre = "Parque Industrial Norte",
+            responsableId = "5",
+            responsableNombre = "Pedro Salazar (Inspector SST)",
+            metodosHabilitados = listOf(MetodoMarcaje.CEDULA),
+            estado = EstadoDispositivo.BLOQUEADO,
+            fechaRegistro = System.currentTimeMillis() - 3456000000, // Hace 40 días
+            motivoBloqueo = "Dispositivo reportado como perdido"
+        )
+    )
+
+    val logsDispositivos = listOf(
+        LogDispositivo(
+            id = "1",
+            dispositivoId = "1",
+            accion = "Marcaje exitoso",
+            usuarioId = "1",
+            usuarioNombre = "Juan García",
+            timestamp = System.currentTimeMillis() - 3600000,
+            detalles = "Ingreso registrado - Método: Cédula"
+        ),
+        LogDispositivo(
+            id = "2",
+            dispositivoId = "1",
+            accion = "Marcaje exitoso",
+            usuarioId = "3",
+            usuarioNombre = "Pedro González",
+            timestamp = System.currentTimeMillis() - 3000000,
+            detalles = "Ingreso registrado - Método: Biometría"
+        ),
+        LogDispositivo(
+            id = "3",
+            dispositivoId = "2",
+            accion = "Estado cambiado a ACTIVO",
+            usuarioId = "admin1",
+            usuarioNombre = "Admin Principal",
+            timestamp = System.currentTimeMillis() - 86400000,
+            detalles = "Dispositivo reactivado tras mantenimiento"
+        ),
+        LogDispositivo(
+            id = "4",
+            dispositivoId = "5",
+            accion = "Estado cambiado a BLOQUEADO",
+            usuarioId = "admin1",
+            usuarioNombre = "Admin Principal",
+            timestamp = System.currentTimeMillis() - 172800000,
+            detalles = "Dispositivo reportado como extraviado en obra"
+        )
+    )
+
+
+
 
     // ==================== FUNCIONES AUXILIARES ====================
 
@@ -521,4 +736,7 @@ object DatosEjemplo {
         "Tanque",
         "Añadir nueva actividad"
     )
+
+
+
 }

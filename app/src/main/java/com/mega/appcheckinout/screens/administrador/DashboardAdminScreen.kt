@@ -1,16 +1,10 @@
+// screens/administrador/DashboardAdminScreen.kt - VERSIÓN ACTUALIZADA CON ACCESOS RÁPIDOS FUNCIONALES
+
 package com.mega.appcheckinout.screens.administrador
 
-import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -31,8 +25,13 @@ fun DashboardAdminScreen(
     onCerrarSesion: () -> Unit,
     onGestionPersonal: () -> Unit,
     onGestionObras: () -> Unit = {},
-    onGestionRolesUsuarios: () -> Unit = {}, // ⬅️ NUEVO
+    onGestionRolesUsuarios: () -> Unit = {},
+    onGestionNovedades: () -> Unit = {},
+    onGestionDispositivos: () -> Unit = {},
     onReportes: () -> Unit = {},
+    // ⬅️ NUEVO: Callbacks para accesos rápidos
+    onCrearObra: () -> Unit = {},
+    onRegistrarPersonal: () -> Unit = {},
     colorPrimario: Color,
     colorSecundario: Color
 ) {
@@ -59,19 +58,19 @@ fun DashboardAdminScreen(
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_menu_info_details),
+                    painter = painterResource(android.R.drawable.ic_menu_info_details),
                     contentDescription = "Info",
                     tint = colorPrimario,
                     modifier = Modifier.clickable { /* Info */ }
                 )
                 Icon(
-                    painter = painterResource(R.drawable.ic_menu_preferences),
+                    painter = painterResource(android.R.drawable.ic_menu_preferences),
                     contentDescription = "Configuración",
                     tint = colorPrimario,
                     modifier = Modifier.clickable { /* Configuración */ }
                 )
                 Icon(
-                    painter = painterResource(R.drawable.ic_lock_power_off),
+                    painter = painterResource(android.R.drawable.ic_lock_power_off),
                     contentDescription = "Cerrar Sesión",
                     tint = Color.Red,
                     modifier = Modifier.clickable { onCerrarSesion() }
@@ -99,15 +98,20 @@ fun DashboardAdminScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                // ✅ BOTÓN CREAR OBRA AHORA FUNCIONAL
                 BotonAccesoRapido(
                     texto = "Crear Obra",
                     colorFondo = colorSecundario,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    onClick = onCrearObra // ⬅️ CONECTADO
                 )
+
+                // ✅ BOTÓN REGISTRAR PERSONAL AHORA FUNCIONAL
                 BotonAccesoRapido(
                     texto = "Registrar personal",
                     colorFondo = colorSecundario,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    onClick = onRegistrarPersonal // ⬅️ CONECTADO
                 )
             }
 
@@ -126,6 +130,7 @@ fun DashboardAdminScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
+                // Fila 1
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -144,6 +149,7 @@ fun DashboardAdminScreen(
                     )
                 }
 
+                // Fila 2
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -152,15 +158,17 @@ fun DashboardAdminScreen(
                         texto = "Gestión de Roles y Usuarios",
                         colorFondo = colorSecundario,
                         modifier = Modifier.weight(1f),
-                        onClick = onGestionRolesUsuarios // ⬅️ CONECTADO
+                        onClick = onGestionRolesUsuarios
                     )
                     BotonGestion(
                         texto = "Gestión de Dispositivos",
                         colorFondo = colorSecundario,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        onClick = onGestionDispositivos
                     )
                 }
 
+                // Fila 3
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -174,7 +182,8 @@ fun DashboardAdminScreen(
                     BotonGestion(
                         texto = "Novedades",
                         colorFondo = colorSecundario,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        onClick = onGestionNovedades
                     )
                 }
             }

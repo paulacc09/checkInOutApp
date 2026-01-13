@@ -1,8 +1,6 @@
 package com.mega.appcheckinout.ui.theme
 
-
 import androidx.compose.foundation.layout.*
-
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,14 +12,17 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+
+// ✅ ACTUALIZADO: Ahora acepta onClick
 @Composable
 fun BotonAccesoRapido(
     texto: String,
     colorFondo: Color,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {} // ⬅️ AGREGADO
 ) {
     Button(
-        onClick = { },
+        onClick = onClick, // ⬅️ CONECTADO
         modifier = modifier.height(80.dp),
         colors = ButtonDefaults.buttonColors(containerColor = colorFondo),
         shape = RoundedCornerShape(12.dp)

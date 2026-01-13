@@ -40,6 +40,12 @@ import androidx.compose.ui.Alignment
 import com.mega.appcheckinout.ui.theme.BotonVolver
 import com.mega.appcheckinout.screens.administrador.*
 import com.mega.appcheckinout.screens.detalle.componentes.TabRolesUsuarios
+import com.mega.appcheckinout.screens.administrador.novedades.NovedadesScreen
+import com.mega.appcheckinout.screens.administrador.dispositivos.GestionDispositivosScreen
+import com.mega.appcheckinout.models.Novedad
+import com.mega.appcheckinout.models.Dispositivo
+import com.mega.appcheckinout.screens.administrador.novedades.DetalleNovedadScreen
+import com.mega.appcheckinout.screens.administrador.dispositivos.DetalleDispositivoScreen
 
 /**
  * CheckInOutApp - Controlador central de navegación de la aplicación
@@ -79,6 +85,13 @@ fun CheckInOutApp() {
     var obraSeleccionada by remember { mutableStateOf<Obra?>(null) }
 
     var pantallaAnteriorObra by remember { mutableStateOf("listadoObras") }
+
+    // Estados para novedades y dispositivos
+    var novedadSeleccionada by remember { mutableStateOf<Novedad?>(null) }
+    var dispositivoSeleccionado by remember { mutableStateOf<Dispositivo?>(null) }
+
+    // Variable para navegación contextual de Reportes
+    var pantallaAnteriorReportes by remember { mutableStateOf("gestionPersonal") }
 
     // Colores del tema
     val colorPrimario = Color(0xFF4A6FA5)
@@ -136,8 +149,15 @@ fun CheckInOutApp() {
                 onCerrarSesion = { pantallaActual = "seleccionRol" },
                 onGestionPersonal = { pantallaActual = "gestionPersonal" },
                 onGestionObras = { pantallaActual = "gestionObras" },
-                onGestionRolesUsuarios = { pantallaActual = "gestionRolesUsuarios" }, // ⬅️ NUEVO
-                onReportes = { pantallaActual = "reportes" },
+                onGestionRolesUsuarios = { pantallaActual = "gestionRolesUsuarios" },
+                onGestionNovedades = { pantallaActual = "gestionNovedades" },
+                onGestionDispositivos = { pantallaActual = "gestionDispositivos" },
+                onReportes = {
+                    pantallaAnteriorReportes = "dashboardAdmin"
+                    pantallaActual = "reportes"
+                },
+                onCrearObra = { pantallaActual = "crearObra" },
+                onRegistrarPersonal = { pantallaActual = "registrarTrabajador" },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
             )
@@ -148,7 +168,10 @@ fun CheckInOutApp() {
                 onRegistrarNuevo = { pantallaActual = "registrarTrabajador" },
                 onListaTrabajadores = { pantallaActual = "listadoTrabajadores" },
                 onAsignaciones = { pantallaActual = "asignacionesActivas" },
-                onReportes = { pantallaActual = "reportes" },
+                onReportes = {
+                    pantallaAnteriorReportes = "gestionPersonal"
+                    pantallaActual = "reportes"
+                },
                 onVolver = { pantallaActual = "dashboardAdmin" },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
@@ -200,7 +223,7 @@ fun CheckInOutApp() {
             // ========== REPORTES Y EXPORTACIÓN ==========
 
             "reportes" -> ReportesScreen(
-                onVolver = { pantallaActual = "gestionPersonal" },
+                onVolver = { pantallaActual = pantallaAnteriorReportes },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
             )
@@ -434,6 +457,181 @@ fun CheckInOutApp() {
                     pantallaActual = "gestionRolesUsuarios"
                 }
             }
+
+            // ========== GESTIÓN DE NOVEDADES ==========
+            "gestionNovedades" -> {
+                NovedadesScreen(
+                    onVolver = { pantallaActual = "dashboardAdmin" },
+                    onCrearNovedad = { pantallaActual = "crearNovedad" },
+                    onVerDetalleNovedad = { novedad ->
+                        novedadSeleccionada = novedad
+                        pantallaActual = "detalleNovedad"
+                    },
+                    colorPrimario = colorPrimario,
+                    colorSecundario = colorSecundario
+                )
+            }
+
+            // Agregar esta nueva pantalla:
+            "detalleNovedad" -> {
+                if (novedadSeleccionada != null) {
+                    DetalleNovedadScreen(
+                        novedad = novedadSeleccionada!!,
+                        onVolver = {
+                            novedadSeleccionada = null
+                            pantallaActual = "gestionNovedades"
+                        },
+                        onAprobar = {
+                            // TODO: Actualizar estado en base de datos
+                            novedadSeleccionada = null
+                            pantallaActual = "gestionNovedades"
+                        },
+                        onRechazar = {
+                            // TODO: Actualizar estado en base de datos
+                            novedadSeleccionada = null
+                            pantallaActual = "gestionNovedades"
+                        },
+                        colorPrimario = colorPrimario,
+                        colorSecundario = colorSecundario
+                    )
+                } else {
+                    pantallaActual = "gestionNovedades"
+                }
+            }
+
+            "crearNovedad" -> {
+                // TODO: Implementar pantalla CrearNovedadScreen
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFE8EFF5))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFFB8D4E3))
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        BotonVolver(
+                            onClick = { pantallaActual = "gestionNovedades" },
+                            colorIcono = Color.White,
+                            colorFondo = colorPrimario
+                        )
+
+                        Text(
+                            text = "CREAR NUEVA NOVEDAD",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorPrimario,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.width(48.dp))
+                    }
+
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Formulario de Crear Novedad\n(Próximamente)",
+                            textAlign = TextAlign.Center,
+                            fontSize = 18.sp,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            }
+
+// ========== GESTIÓN DE DISPOSITIVOS ==========
+            "gestionDispositivos" -> {
+                GestionDispositivosScreen(
+                    onVolver = { pantallaActual = "dashboardAdmin" },
+                    onRegistrarDispositivo = { pantallaActual = "registrarDispositivo" },
+                    onVerDetalleDispositivo = { dispositivo ->
+                        dispositivoSeleccionado = dispositivo
+                        pantallaActual = "detalleDispositivo"
+                    },
+                    colorPrimario = colorPrimario,
+                    colorSecundario = colorSecundario
+                )
+            }
+            "detalleDispositivo" -> {
+                if (dispositivoSeleccionado != null) {
+                    DetalleDispositivoScreen(
+                        dispositivo = dispositivoSeleccionado!!,
+                        onVolver = {
+                            dispositivoSeleccionado = null
+                            pantallaActual = "gestionDispositivos"
+                        },
+                        onCambiarEstado = { nuevoEstado ->
+                            // TODO: Actualizar estado en base de datos
+                            dispositivoSeleccionado = null
+                            pantallaActual = "gestionDispositivos"
+                        },
+                        onEliminar = {
+                            // TODO: Eliminar de base de datos
+                            dispositivoSeleccionado = null
+                            pantallaActual = "gestionDispositivos"
+                        },
+                        colorPrimario = colorPrimario,
+                        colorSecundario = colorSecundario
+                    )
+                } else {
+                    pantallaActual = "gestionDispositivos"
+                }
+            }
+
+            "registrarDispositivo" -> {
+                // TODO: Implementar pantalla RegistrarDispositivoScreen
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFFE8EFF5))
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFFB8D4E3))
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        BotonVolver(
+                            onClick = { pantallaActual = "gestionDispositivos" },
+                            colorIcono = Color.White,
+                            colorFondo = colorPrimario
+                        )
+
+                        Text(
+                            text = "REGISTRAR DISPOSITIVO",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorPrimario,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.Center
+                        )
+
+                        Spacer(modifier = Modifier.width(48.dp))
+                    }
+
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Formulario de Registrar Dispositivo\n(Próximamente)",
+                            textAlign = TextAlign.Center,
+                            fontSize = 18.sp,
+                            color = Color.Gray
+                        )
+                    }
+                }
+            }
+
         }
     }
 }
