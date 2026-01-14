@@ -34,7 +34,7 @@ import com.mega.appcheckinout.ui.theme.BotonVolver
 // ==================== PANTALLA 5: Login por Rol ====================
 @Composable
 fun LoginRolScreen(
-    rolSeleccionado: String,  // â† Nuevo parÃ¡metro
+    rolSeleccionado: String,
     onLoginExitoso: () -> Unit,
     onVolver: () -> Unit,
     colorPrimario: Color
@@ -76,9 +76,9 @@ fun LoginRolScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // TÃ­tulo dinÃ¡mico segÃºn el rol seleccionado
+        // Título dinámico según el rol seleccionado
         Text(
-            text = rolSeleccionado.uppercase(),  // â† Muestra el rol en mayÃºsculas
+            text = rolSeleccionado.uppercase(),
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = colorPrimario
@@ -100,7 +100,7 @@ fun LoginRolScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Campo ContraseÃ±a
+        // Campo Contraseña
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -115,43 +115,45 @@ fun LoginRolScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // BotÃ³n Iniciar SesiÃ³n
+        // Botón Iniciar Sesión
         Button(
             onClick = {
-                // âœ… Solo permite entrar si es Administrativo
-                if (rolSeleccionado == "Administrativo") {
+                // ✅ Permite entrar a Administrativo e Inspector SST
+                if (rolSeleccionado == "Administrativo" || rolSeleccionado == "Inspector SST") {
                     onLoginExitoso()
                 }
-                // âŒ Si es Inspector SST o Encargado, no hace nada
+                // ❌ Si es Encargado, no hace nada (aún no implementado)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorPrimario,
-                disabledContainerColor = Color.Gray  // Color gris cuando deshabilitado
+                disabledContainerColor = Color.Gray
             ),
             shape = RoundedCornerShape(25.dp),
-            enabled = if (rolSeleccionado == "Administrativo") {
-                // âœ… Administrativo: habilitado si hay usuario y contraseÃ±a
-                password.isNotBlank() && usuario.isNotBlank()
-            } else {
-                // âŒ Inspector SST y Encargado: siempre deshabilitado
-                false
+            enabled = when (rolSeleccionado) {
+                "Administrativo", "Inspector SST" -> {
+                    // ✅ Habilitado si hay usuario y contraseña
+                    password.isNotBlank() && usuario.isNotBlank()
+                }
+                else -> {
+                    // ❌ Encargado: aún deshabilitado
+                    false
+                }
             }
         ) {
             Text(
-                text = if (rolSeleccionado == "Administrativo") {
-                    "Iniciar Sesión"
-                } else {
-                    "Próximamente"  // Texto diferente para roles no disponibles
+                text = when (rolSeleccionado) {
+                    "Administrativo", "Inspector SST" -> "Iniciar Sesión"
+                    else -> "Próximamente"
                 },
                 fontSize = 16.sp
             )
         }
 
-        // Mensaje informativo para roles no disponibles
-        if (rolSeleccionado != "Administrativo") {
+        // Mensaje informativo solo para roles no disponibles
+        if (rolSeleccionado == "Encargado") {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Esta funcionalidad estará disponible próximamente",

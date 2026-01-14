@@ -46,68 +46,38 @@ import com.mega.appcheckinout.models.Novedad
 import com.mega.appcheckinout.models.Dispositivo
 import com.mega.appcheckinout.screens.administrador.novedades.DetalleNovedadScreen
 import com.mega.appcheckinout.screens.administrador.dispositivos.DetalleDispositivoScreen
+import com.mega.appcheckinout.screens.inspector_sst.*
 
-/**
- * CheckInOutApp - Controlador central de navegación de la aplicación
- *
- * Este composable maneja:
- * 1. El estado de navegación (qué pantalla mostrar)
- * 2. El estado global de la app (rol seleccionado, trabajador seleccionado, etc.)
- * 3. Las transiciones entre pantallas
- *
- * Flujo de navegación:
- * login → registro/confirmación
- *      → seleccionRol → loginRol → dashboardAdmin → gestionPersonal → reportes
- *                                                  → gestionObras
- *                                                  → gestionRolesUsuarios ⬅️ NUEVO
- *                                                  → registrarTrabajador
- *                                                  → listadoTrabajadores → verPerfil
- *                                                                        → editarTrabajador
- *                                                  → asignacionesActivas
- */
 @Composable
 fun CheckInOutApp() {
     // ========== ESTADOS DE NAVEGACIÓN ==========
-
-    // Controla qué pantalla se muestra actualmente
     var pantallaActual by remember { mutableStateOf("login") }
-
-    // Guarda el rol que el usuario seleccionó (Administrativo, Inspector SST, Encargado)
     var rolSeleccionado by remember { mutableStateOf("") }
-
-    // Guarda el trabajador completo para ver el perfil con todos los datos
     var trabajadorCompletoSeleccionado by remember { mutableStateOf<TrabajadorCompleto?>(null) }
-
-    // ⬅️ NUEVO: Estado para gestión de usuarios
     var usuarioSeleccionado by remember { mutableStateOf<Usuario?>(null) }
     var modoEdicionUsuario by remember { mutableStateOf(false) }
-
     var obraSeleccionada by remember { mutableStateOf<Obra?>(null) }
-
     var pantallaAnteriorObra by remember { mutableStateOf("listadoObras") }
-
-    // Estados para novedades y dispositivos
     var novedadSeleccionada by remember { mutableStateOf<Novedad?>(null) }
     var dispositivoSeleccionado by remember { mutableStateOf<Dispositivo?>(null) }
-
-    // Variable para navegación contextual de Reportes
     var pantallaAnteriorReportes by remember { mutableStateOf("gestionPersonal") }
+
+    // ✅ NUEVO: Estado para Inspector SST
+    var jornadaAbierta by remember { mutableStateOf(false) }
+    var registroAsistenciaSeleccionado by remember { mutableStateOf<RegistroAsistenciaTemp?>(null) }
 
     // Colores del tema
     val colorPrimario = Color(0xFF4A6FA5)
     val colorSecundario = Color(0xFF8FB8C8)
     val colorFondo = Color(0xFFE8EFF5)
 
-    // ========== CONTENEDOR PRINCIPAL ==========
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = colorFondo
     ) {
-        // Switch de navegación - determina qué pantalla mostrar
         when(pantallaActual) {
 
             // ========== FLUJO DE AUTENTICACIÓN ==========
-
             "login" -> LoginEmpresaScreen(
                 onRegistrar = { pantallaActual = "registro" },
                 onIniciarSesion = { pantallaActual = "seleccionRol" },
@@ -126,7 +96,6 @@ fun CheckInOutApp() {
             )
 
             // ========== SELECCIÓN DE ROL ==========
-
             "seleccionRol" -> SeleccionRolScreen(
                 onRolSeleccionado = { rol ->
                     rolSeleccionado = rol
@@ -138,13 +107,115 @@ fun CheckInOutApp() {
 
             "loginRol" -> LoginRolScreen(
                 rolSeleccionado = rolSeleccionado,
-                onLoginExitoso = { pantallaActual = "dashboardAdmin" },
+                onLoginExitoso = {
+                    // ✅ Redirige según el rol
+                    when (rolSeleccionado) {
+                        "Administrativo" -> pantallaActual = "dashboardAdmin"
+                        "Inspector SST" -> pantallaActual = "dashboardSST"
+                        else -> pantallaActual = "dashboardAdmin" // Fallback
+                    }
+                },
                 onVolver = { pantallaActual = "seleccionRol" },
                 colorPrimario = colorPrimario
             )
 
-            // ========== DASHBOARD ADMINISTRATIVO ==========
+            // ========== DASHBOARD INSPECTOR SST ==========
+            "dashboardSST" -> DashboardSSTScreen(
+                obraAsignada = "Edificio Mandarino", // TODO: Obtener de BD
+                onCerrarSesion = { pantallaActual = "seleccionRol" },
+                onAbrirAsistencia = { jornadaAbierta = true },
+                onCerrarAsistencia = { jornadaAbierta = false },
+                onMarcarAsistencia = { pantallaActual = "marcarAsistenciaSST" },
+                onGestionNovedades = { pantallaActual = "gestionNovedadesSST" },
+                onRegistrarPersonal = { pantallaActual = "registrarTrabajador" },
+                onReportes = { pantallaActual = "reportesSST" },
+                onVerPersonal = { pantallaActual = "gestionPersonalSST" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
 
+            "marcarAsistenciaSST" -> MarcarAsistenciaSSTScreen(
+                obraAsignada = "Edificio Mandarino",
+                jornadaAbierta = jornadaAbierta,
+                onVolver = { pantallaActual = "dashboardSST" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "asistenciaDiariaSST" -> AsistenciaDiariaScreen(
+                obraAsignada = "Edificio Mandarino",
+                onVolver = { pantallaActual = "dashboardSST" },
+                onVerPerfil = { registro ->
+                    registroAsistenciaSeleccionado = registro
+                    pantallaActual = "verPerfilSST"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "gestionNovedadesSST" -> GestionNovedadesScreen(
+                obraAsignada = "Edificio Mandarino",
+                onVolver = { pantallaActual = "dashboardSST" },
+                onVerDetalle = { novedad ->
+                    novedadSeleccionada = novedad
+                    pantallaActual = "detalleNovedadSST"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "detalleNovedadSST" -> {
+                if (novedadSeleccionada != null) {
+                    DetalleNovedadSSTScreen(
+                        novedad = novedadSeleccionada!!,
+                        onVolver = {
+                            novedadSeleccionada = null
+                            pantallaActual = "gestionNovedadesSST"
+                        },
+                        onAprobar = {
+                            // TODO: Actualizar en BD
+                            novedadSeleccionada = null
+                            pantallaActual = "gestionNovedadesSST"
+                        },
+                        onRechazar = { motivo ->
+                            // TODO: Actualizar en BD con motivo
+                            novedadSeleccionada = null
+                            pantallaActual = "gestionNovedadesSST"
+                        },
+                        colorPrimario = colorPrimario,
+                        colorSecundario = colorSecundario
+                    )
+                } else {
+                    pantallaActual = "gestionNovedadesSST"
+                }
+            }
+
+            "gestionPersonalSST" -> GestionPersonalSSTScreen(
+                obraAsignada = "Edificio Mandarino",
+                onVolver = { pantallaActual = "dashboardSST" },
+                onVerPerfil = { trabajador ->
+                    trabajadorCompletoSeleccionado = trabajador
+                    pantallaActual = "verPerfil"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "reportesSST" -> ReportesSSTScreen(
+                obraAsignada = "Edificio Mandarino",
+                onVolver = { pantallaActual = "dashboardSST" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "dispositivosSST" -> DispositivosSSTScreen(
+                obraAsignada = "Edificio Mandarino",
+                onVolver = { pantallaActual = "dashboardSST" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            // ========== DASHBOARD ADMINISTRATIVO ==========
             "dashboardAdmin" -> DashboardAdminScreen(
                 onCerrarSesion = { pantallaActual = "seleccionRol" },
                 onGestionPersonal = { pantallaActual = "gestionPersonal" },
@@ -163,7 +234,6 @@ fun CheckInOutApp() {
             )
 
             // ========== GESTIÓN DE PERSONAL ==========
-
             "gestionPersonal" -> GestionPersonalScreen(
                 onRegistrarNuevo = { pantallaActual = "registrarTrabajador" },
                 onListaTrabajadores = { pantallaActual = "listadoTrabajadores" },
@@ -178,10 +248,14 @@ fun CheckInOutApp() {
             )
 
             "registrarTrabajador" -> RegistrarTrabajadorScreen(
-                onVolver = { pantallaActual = "gestionPersonal" },
-                onRegistrarBiometrico = {
-                    // TODO: Implementar registro biométrico
+                onVolver = {
+                    pantallaActual = if (rolSeleccionado == "Inspector SST") {
+                        "dashboardSST"
+                    } else {
+                        "gestionPersonal"
+                    }
                 },
+                onRegistrarBiometrico = {},
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
             )
@@ -189,9 +263,7 @@ fun CheckInOutApp() {
             "listadoTrabajadores" -> ListadoTrabajadoresScreen(
                 onVolver = { pantallaActual = "gestionPersonal" },
                 onRegistrarPersonal = { pantallaActual = "registrarTrabajador" },
-                onRegistrarBiometrico = {
-                    // TODO: Implementar registro biométrico desde listado
-                },
+                onRegistrarBiometrico = {},
                 onVerPerfil = { trabajadorCompleto ->
                     trabajadorCompletoSeleccionado = trabajadorCompleto
                     pantallaActual = "verPerfil"
@@ -204,8 +276,6 @@ fun CheckInOutApp() {
                 colorSecundario = colorSecundario
             )
 
-            // ========== ASIGNACIONES ACTIVAS ==========
-
             "asignacionesActivas" -> AsignacionesActivasScreen(
                 onVolver = { pantallaActual = "gestionPersonal" },
                 onVerPerfil = { trabajadorCompleto ->
@@ -213,14 +283,11 @@ fun CheckInOutApp() {
                     pantallaActual = "verPerfil"
                 },
                 onAsignarNuevoTrabajador = { obraId ->
-                    // TODO: Implementar asignación directa a obra específica
                     pantallaActual = "registrarTrabajador"
                 },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
             )
-
-            // ========== REPORTES Y EXPORTACIÓN ==========
 
             "reportes" -> ReportesScreen(
                 onVolver = { pantallaActual = pantallaAnteriorReportes },
@@ -228,15 +295,17 @@ fun CheckInOutApp() {
                 colorSecundario = colorSecundario
             )
 
-            // ========== DETALLE DE TRABAJADOR ==========
-
             "verPerfil" -> {
                 if (trabajadorCompletoSeleccionado != null) {
                     VerPerfilCompletoScreen(
                         trabajador = trabajadorCompletoSeleccionado!!,
                         onVolver = {
                             trabajadorCompletoSeleccionado = null
-                            pantallaActual = "listadoTrabajadores"
+                            pantallaActual = if (rolSeleccionado == "Inspector SST") {
+                                "gestionPersonalSST"
+                            } else {
+                                "listadoTrabajadores"
+                            }
                         },
                         colorPrimario = colorPrimario
                     )
@@ -254,7 +323,6 @@ fun CheckInOutApp() {
                             pantallaActual = "listadoTrabajadores"
                         },
                         onGuardar = { actualizado ->
-                            // TODO: Guardar cambios en la base de datos
                             trabajadorCompletoSeleccionado = actualizado
                             pantallaActual = "listadoTrabajadores"
                         },
@@ -267,7 +335,6 @@ fun CheckInOutApp() {
             }
 
             // ========== GESTIÓN DE OBRAS ==========
-
             "gestionObras" -> GestionObrasScreen(
                 onCrearObra = { pantallaActual = "crearObra" },
                 onListadoObras = { pantallaActual = "listadoObras" },
@@ -280,9 +347,7 @@ fun CheckInOutApp() {
 
             "crearObra" -> CrearObraScreen(
                 onVolver = { pantallaActual = "gestionObras" },
-                onObraCreada = {
-                    pantallaActual = "listadoObras"
-                },
+                onObraCreada = { pantallaActual = "listadoObras" },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
             )
@@ -329,19 +394,13 @@ fun CheckInOutApp() {
                             obraSeleccionada = null
                             pantallaActual = pantallaAnteriorObra
                         },
-                        onEditarObra = {
-                            // TODO: Navegar a pantalla de edición
-                        },
+                        onEditarObra = {},
                         onVerTrabajador = { trabajador ->
                             trabajadorCompletoSeleccionado = trabajador
                             pantallaActual = "verPerfil"
                         },
-                        onAsignarTrabajador = {
-                            // TODO: Navegar a asignación de trabajadores
-                        },
-                        onGenerarReporte = {
-                            pantallaActual = "reportes"
-                        },
+                        onAsignarTrabajador = {},
+                        onGenerarReporte = { pantallaActual = "reportes" },
                         colorPrimario = colorPrimario,
                         colorSecundario = colorSecundario
                     )
@@ -350,14 +409,13 @@ fun CheckInOutApp() {
                 }
             }
 
-            // ========== GESTIÓN DE ROLES Y USUARIOS NUEVO ==========
+            // ========== GESTIÓN DE ROLES Y USUARIOS ==========
             "gestionRolesUsuarios" -> {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color(0xFFE8EFF5))
                 ) {
-                    // Header consistente con el resto de la app
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -371,7 +429,6 @@ fun CheckInOutApp() {
                             colorIcono = Color.White,
                             colorFondo = colorPrimario
                         )
-
                         Text(
                             text = "GESTIÓN DE ROLES Y USUARIOS",
                             fontSize = 16.sp,
@@ -380,37 +437,25 @@ fun CheckInOutApp() {
                             modifier = Modifier.weight(1f),
                             textAlign = TextAlign.Center
                         )
-
                         Spacer(modifier = Modifier.width(48.dp))
                     }
-
-                    // Componente principal con tabs
                     TabRolesUsuarios(colorPrimario, colorSecundario)
                 }
             }
 
-            // Crear nuevo usuario
             "crearUsuario" -> {
                 CrearEditarUsuarioScreen(
-                    usuario = null, // null = crear nuevo
-                    onGuardar = { nuevoUsuario ->
-                        // TODO: Guardar en base de datos
-                        // Volver a la lista
-                        pantallaActual = "gestionRolesUsuarios"
-                    },
-                    onCancelar = {
-                        pantallaActual = "gestionRolesUsuarios"
-                    }
+                    usuario = null,
+                    onGuardar = { pantallaActual = "gestionRolesUsuarios" },
+                    onCancelar = { pantallaActual = "gestionRolesUsuarios" }
                 )
             }
 
-            // Editar usuario existente
             "editarUsuario" -> {
                 if (usuarioSeleccionado != null) {
                     CrearEditarUsuarioScreen(
                         usuario = usuarioSeleccionado,
-                        onGuardar = { usuarioActualizado ->
-                            // TODO: Actualizar en base de datos
+                        onGuardar = {
                             usuarioSeleccionado = null
                             pantallaActual = "gestionRolesUsuarios"
                         },
@@ -424,7 +469,6 @@ fun CheckInOutApp() {
                 }
             }
 
-            // Ver detalle completo del usuario
             "detalleUsuario" -> {
                 if (usuarioSeleccionado != null) {
                     DetalleUsuarioScreen(
@@ -433,21 +477,13 @@ fun CheckInOutApp() {
                             usuarioSeleccionado = usuario
                             pantallaActual = "editarUsuario"
                         },
-                        onBloquear = { usuario ->
-                            // TODO: Bloquear/desbloquear usuario
-                            // Actualizar estado y recargar
-                        },
-                        onEliminar = { usuario ->
-                            // TODO: Eliminar usuario
+                        onBloquear = {},
+                        onEliminar = {
                             usuarioSeleccionado = null
                             pantallaActual = "gestionRolesUsuarios"
                         },
-                        onRestablecerContraseña = { usuario ->
-                            // TODO: Generar nueva contraseña y enviar email
-                        },
-                        onCerrarSesiones = { usuario ->
-                            // TODO: Cerrar todas las sesiones del usuario
-                        },
+                        onRestablecerContraseña = {},
+                        onCerrarSesiones = {},
                         onVolver = {
                             usuarioSeleccionado = null
                             pantallaActual = "gestionRolesUsuarios"
@@ -472,7 +508,6 @@ fun CheckInOutApp() {
                 )
             }
 
-            // Agregar esta nueva pantalla:
             "detalleNovedad" -> {
                 if (novedadSeleccionada != null) {
                     DetalleNovedadScreen(
@@ -482,12 +517,10 @@ fun CheckInOutApp() {
                             pantallaActual = "gestionNovedades"
                         },
                         onAprobar = {
-                            // TODO: Actualizar estado en base de datos
                             novedadSeleccionada = null
                             pantallaActual = "gestionNovedades"
                         },
                         onRechazar = {
-                            // TODO: Actualizar estado en base de datos
                             novedadSeleccionada = null
                             pantallaActual = "gestionNovedades"
                         },
@@ -500,7 +533,6 @@ fun CheckInOutApp() {
             }
 
             "crearNovedad" -> {
-                // TODO: Implementar pantalla CrearNovedadScreen
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -519,7 +551,6 @@ fun CheckInOutApp() {
                             colorIcono = Color.White,
                             colorFondo = colorPrimario
                         )
-
                         Text(
                             text = "CREAR NUEVA NOVEDAD",
                             fontSize = 16.sp,
@@ -528,7 +559,6 @@ fun CheckInOutApp() {
                             modifier = Modifier.weight(1f),
                             textAlign = TextAlign.Center
                         )
-
                         Spacer(modifier = Modifier.width(48.dp))
                     }
 
@@ -546,7 +576,7 @@ fun CheckInOutApp() {
                 }
             }
 
-// ========== GESTIÓN DE DISPOSITIVOS ==========
+            // ========== GESTIÓN DE DISPOSITIVOS ==========
             "gestionDispositivos" -> {
                 GestionDispositivosScreen(
                     onVolver = { pantallaActual = "dashboardAdmin" },
@@ -559,6 +589,7 @@ fun CheckInOutApp() {
                     colorSecundario = colorSecundario
                 )
             }
+
             "detalleDispositivo" -> {
                 if (dispositivoSeleccionado != null) {
                     DetalleDispositivoScreen(
@@ -567,13 +598,11 @@ fun CheckInOutApp() {
                             dispositivoSeleccionado = null
                             pantallaActual = "gestionDispositivos"
                         },
-                        onCambiarEstado = { nuevoEstado ->
-                            // TODO: Actualizar estado en base de datos
+                        onCambiarEstado = {
                             dispositivoSeleccionado = null
                             pantallaActual = "gestionDispositivos"
                         },
                         onEliminar = {
-                            // TODO: Eliminar de base de datos
                             dispositivoSeleccionado = null
                             pantallaActual = "gestionDispositivos"
                         },
@@ -586,7 +615,6 @@ fun CheckInOutApp() {
             }
 
             "registrarDispositivo" -> {
-                // TODO: Implementar pantalla RegistrarDispositivoScreen
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -605,7 +633,6 @@ fun CheckInOutApp() {
                             colorIcono = Color.White,
                             colorFondo = colorPrimario
                         )
-
                         Text(
                             text = "REGISTRAR DISPOSITIVO",
                             fontSize = 16.sp,
@@ -614,7 +641,6 @@ fun CheckInOutApp() {
                             modifier = Modifier.weight(1f),
                             textAlign = TextAlign.Center
                         )
-
                         Spacer(modifier = Modifier.width(48.dp))
                     }
 
@@ -631,32 +657,6 @@ fun CheckInOutApp() {
                     }
                 }
             }
-
         }
     }
 }
-
-/**
- * NOTAS IMPORTANTES:
- *
- * 1. Este archivo SOLO maneja navegación, no lógica de negocio
- * 2. Cada pantalla es responsable de su propia UI y validaciones
- * 3. Los estados (rolSeleccionado, trabajadorCompletoSeleccionado, usuarioSeleccionado) se mantienen aquí
- *    porque necesitan persistir entre navegaciones
- * 4. Para agregar una nueva pantalla:
- *    - Crear el archivo Screen.kt en screens/
- *    - Agregar un nuevo case en el when()
- *    - Conectar con las callbacks de navegación
- *
- * CAMBIOS RECIENTES:
- * - Agregado módulo completo de Gestión de Roles y Usuarios
- * - Conectado desde Dashboard con navegación bidireccional
- * - Implementadas pantallas: Lista, Crear, Editar, Detalle de usuarios
- *
- * FUTURAS MEJORAS:
- * - Migrar a Jetpack Navigation Compose para navegación más robusta
- * - Implementar ViewModel para manejar estados globales
- * - Agregar animaciones de transición entre pantallas
- * - Implementar carga de datos completos desde base de datos real
- * - Agregar sistema de permisos por rol de usuario
- */
