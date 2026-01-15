@@ -13,19 +13,24 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 
-// ✅ ACTUALIZADO: Ahora acepta onClick
+// ✅ ACTUALIZADO: Ahora acepta onClick y enabled
 @Composable
 fun BotonAccesoRapido(
     texto: String,
     colorFondo: Color,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {} // ⬅️ AGREGADO
+    onClick: () -> Unit = {},
+    enabled: Boolean = true  // ✅ NUEVO PARÁMETRO
 ) {
     Button(
-        onClick = onClick, // ⬅️ CONECTADO
+        onClick = onClick,
         modifier = modifier.height(80.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = colorFondo),
-        shape = RoundedCornerShape(12.dp)
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorFondo,
+            disabledContainerColor = Color.Gray  // ✅ Color cuando está deshabilitado
+        ),
+        shape = RoundedCornerShape(12.dp),
+        enabled = enabled  // ✅ APLICAR EL PARÁMETRO
     ) {
         Text(
             text = texto,

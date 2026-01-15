@@ -30,8 +30,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.ui.theme.BotonVolver
-
-// ==================== PANTALLA 5: Login por Rol ====================
 @Composable
 fun LoginRolScreen(
     rolSeleccionado: String,
@@ -118,11 +116,12 @@ fun LoginRolScreen(
         // Botón Iniciar Sesión
         Button(
             onClick = {
-                // ✅ Permite entrar a Administrativo e Inspector SST
-                if (rolSeleccionado == "Administrativo" || rolSeleccionado == "Inspector SST") {
+                // ✅ Permite entrar a Administrativo, Inspector SST y Encargado
+                if (rolSeleccionado == "Administrativo" ||
+                    rolSeleccionado == "Inspector SST" ||
+                    rolSeleccionado == "Encargado") {
                     onLoginExitoso()
                 }
-                // ❌ Si es Encargado, no hace nada (aún no implementado)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -133,19 +132,19 @@ fun LoginRolScreen(
             ),
             shape = RoundedCornerShape(25.dp),
             enabled = when (rolSeleccionado) {
-                "Administrativo", "Inspector SST" -> {
+                "Administrativo", "Inspector SST", "Encargado" -> {
                     // ✅ Habilitado si hay usuario y contraseña
                     password.isNotBlank() && usuario.isNotBlank()
                 }
                 else -> {
-                    // ❌ Encargado: aún deshabilitado
+                    // ❌ Otros roles: aún deshabilitado
                     false
                 }
             }
         ) {
             Text(
                 text = when (rolSeleccionado) {
-                    "Administrativo", "Inspector SST" -> "Iniciar Sesión"
+                    "Administrativo", "Inspector SST", "Encargado" -> "Iniciar Sesión"
                     else -> "Próximamente"
                 },
                 fontSize = 16.sp
@@ -153,7 +152,9 @@ fun LoginRolScreen(
         }
 
         // Mensaje informativo solo para roles no disponibles
-        if (rolSeleccionado == "Encargado") {
+        if (rolSeleccionado != "Administrativo" &&
+            rolSeleccionado != "Inspector SST" &&
+            rolSeleccionado != "Encargado") {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Esta funcionalidad estará disponible próximamente",

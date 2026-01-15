@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.Alignment
 import com.mega.appcheckinout.ui.theme.BotonVolver
-import com.mega.appcheckinout.screens.administrador.*
 import com.mega.appcheckinout.screens.detalle.componentes.TabRolesUsuarios
 import com.mega.appcheckinout.screens.administrador.novedades.NovedadesScreen
 import com.mega.appcheckinout.screens.administrador.dispositivos.GestionDispositivosScreen
@@ -47,6 +46,17 @@ import com.mega.appcheckinout.models.Dispositivo
 import com.mega.appcheckinout.screens.administrador.novedades.DetalleNovedadScreen
 import com.mega.appcheckinout.screens.administrador.dispositivos.DetalleDispositivoScreen
 import com.mega.appcheckinout.screens.inspector_sst.*
+import com.mega.appcheckinout.screens.encargado.asistencia.AsistenciaDiariaEncargadoScreen
+import com.mega.appcheckinout.screens.encargado.asistencia.MarcarAsistenciaEncargadoScreen
+import com.mega.appcheckinout.screens.encargado.novedades.ConsultarNovedadesScreen
+import com.mega.appcheckinout.screens.encargado.novedades.CrearNovedadEncargadoScreen
+import com.mega.appcheckinout.screens.encargado.obra.DetalleObraEncargadoScreen
+import com.mega.appcheckinout.screens.encargado.personal.GestionPersonalEncargadoScreen
+import com.mega.appcheckinout.screens.encargado.personal.SolicitarTraspasoScreen
+import com.mega.appcheckinout.screens.encargado.reportes.ReportesEncargadoScreen
+import com.mega.appcheckinout.screens.encargado.reportes.VistaReporteObraScreen
+import com.mega.appcheckinout.screens.encargado.DashboardEncargadoScreen
+
 
 @Composable
 fun CheckInOutApp() {
@@ -65,6 +75,11 @@ fun CheckInOutApp() {
     // ✅ NUEVO: Estado para Inspector SST
     var jornadaAbierta by remember { mutableStateOf(false) }
     var registroAsistenciaSeleccionado by remember { mutableStateOf<RegistroAsistenciaTemp?>(null) }
+
+    // ✅ NUEVO: Estados para Encargado
+    var inspectorPresente by remember { mutableStateOf(true) }
+    var obraEncargado by remember { mutableStateOf("Edificio Mandarino") } // TODO: Desde BD
+
 
     // Colores del tema
     val colorPrimario = Color(0xFF4A6FA5)
@@ -211,6 +226,156 @@ fun CheckInOutApp() {
             "dispositivosSST" -> DispositivosSSTScreen(
                 obraAsignada = "Edificio Mandarino",
                 onVolver = { pantallaActual = "dashboardSST" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+                // ========== DASHBOARD ENCARGADO ==========
+            "dashboardEncargado" -> DashboardEncargadoScreen(
+            obraAsignada = obraEncargado,
+            nombreEncargado = "Ana Ramírez", // TODO: Obtener del usuario logueado
+            onCerrarSesion = { pantallaActual = "seleccionRol" },
+            onVerPersonal = { pantallaActual = "gestionPersonalEncargado" },
+            onAsistenciaDiaria = { pantallaActual = "asistenciaDiariaEncargado" },
+            onConsultarNovedades = { pantallaActual = "consultarNovedadesEncargado" },
+            onReportes = { pantallaActual = "reportesEncargado" },
+            onDetalleObra = { pantallaActual = "detalleObraEncargado" },
+            onSolicitarTraspaso = { pantallaActual = "solicitarTraspaso" },
+            colorPrimario = colorPrimario,
+            colorSecundario = colorSecundario
+        )
+
+            // ========== GESTIÓN DE PERSONAL - ENCARGADO ==========
+            "gestionPersonalEncargado" -> GestionPersonalEncargadoScreen(
+                obraAsignada = obraEncargado,
+                obraId = "1", // TODO: Obtener ID real
+                onVolver = { pantallaActual = "dashboardEncargado" },
+                onVerPerfil = { trabajador ->
+                    trabajadorCompletoSeleccionado = trabajador
+                    pantallaActual = "verPerfil"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            // ========== ASISTENCIA - ENCARGADO ==========
+            "asistenciaDiariaEncargado" -> AsistenciaDiariaEncargadoScreen(
+                obraAsignada = obraEncargado,
+                inspectorPresente = inspectorPresente,
+                onVolver = { pantallaActual = "dashboardEncargado" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "marcarAsistenciaEncargado" -> MarcarAsistenciaEncargadoScreen(
+                obraAsignada = obraEncargado,
+                inspectorPresente = inspectorPresente,
+                onVolver = { pantallaActual = "asistenciaDiariaEncargado" },
+                onMarcarAsistencia = { cedula ->
+                    // TODO: Guardar marcaje en BD
+                    pantallaActual = "asistenciaDiariaEncargado"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            // ========== NOVEDADES - ENCARGADO ==========
+            "consultarNovedadesEncargado" -> ConsultarNovedadesScreen(
+                obraAsignada = obraEncargado,
+                onVolver = { pantallaActual = "dashboardEncargado" },
+                onVerDetalle = { novedad ->
+                    novedadSeleccionada = novedad
+                    pantallaActual = "detalleNovedadEncargado"
+                },
+                onCrearNovedad = { pantallaActual = "crearNovedadEncargado" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "crearNovedadEncargado" -> CrearNovedadEncargadoScreen(
+                obraAsignada = obraEncargado,
+                onVolver = { pantallaActual = "consultarNovedadesEncargado" },
+                onGuardar = {
+                    // TODO: Guardar en BD
+                    pantallaActual = "consultarNovedadesEncargado"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "detalleNovedadEncargado" -> {
+                if (novedadSeleccionada != null) {
+                    DetalleNovedadSSTScreen(
+                        novedad = novedadSeleccionada!!,
+                        onVolver = {
+                            novedadSeleccionada = null
+                            pantallaActual = "consultarNovedadesEncargado"
+                        },
+                        onAprobar = {
+                            // Encargado NO puede aprobar
+                            novedadSeleccionada = null
+                            pantallaActual = "consultarNovedadesEncargado"
+                        },
+                        onRechazar = { motivo ->
+                            // Encargado NO puede rechazar
+                            novedadSeleccionada = null
+                            pantallaActual = "consultarNovedadesEncargado"
+                        },
+                        colorPrimario = colorPrimario,
+                        colorSecundario = colorSecundario
+                    )
+                } else {
+                    pantallaActual = "consultarNovedadesEncargado"
+                }
+            }
+
+            // ========== OBRA - ENCARGADO ==========
+            "detalleObraEncargado" -> DetalleObraEncargadoScreen(
+                obraId = "1", // TODO: ID de la obra del encargado
+                onVolver = { pantallaActual = "dashboardEncargado" },
+                onSolicitarTraspaso = { pantallaActual = "solicitarTraspaso" },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "solicitarTraspaso" -> SolicitarTraspasoScreen(
+                obraAsignada = obraEncargado,
+                obraIdActual = "1",
+                onVolver = { pantallaActual = "dashboardEncargado" },
+                onSolicitudEnviada = {
+                    // TODO: Guardar solicitud en BD
+                    pantallaActual = "dashboardEncargado"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            // ========== REPORTES - ENCARGADO ==========
+            "reportesEncargado" -> ReportesEncargadoScreen(
+                obraAsignada = obraEncargado,
+                obraId = "1",
+                onVolver = { pantallaActual = "dashboardEncargado" },
+                onGenerarReporte = { tipo, inicio, fin ->
+                    // TODO: Generar reporte
+                    pantallaActual = "vistaReporteObra"
+                },
+                colorPrimario = colorPrimario,
+                colorSecundario = colorSecundario
+            )
+
+            "vistaReporteObra" -> VistaReporteObraScreen(
+                obraAsignada = obraEncargado,
+                tipoReporte = "Asistencia Diaria",
+                fechaInicio = "01/01/2025",
+                fechaFin = "15/01/2025",
+                filtroRol = "Todos",
+                onVolver = { pantallaActual = "reportesEncargado" },
+                onExportarCSV = {
+                    // TODO: Exportar CSV
+                },
+                onExportarPDF = {
+                    // TODO: Exportar PDF
+                },
                 colorPrimario = colorPrimario,
                 colorSecundario = colorSecundario
             )

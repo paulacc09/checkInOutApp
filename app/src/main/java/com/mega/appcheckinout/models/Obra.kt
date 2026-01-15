@@ -13,9 +13,9 @@ data class Obra(
     val estado: EstadoObra = EstadoObra.ACTIVA,
     val numeroTrabajadores: Int = 0
 ) {
-    enum class EstadoObra {
-        ACTIVA,
-        FINALIZADA
+    enum class EstadoObra(val displayName: String) {  // ✅ Agregado displayName
+        ACTIVA("Activa"),
+        FINALIZADA("Finalizada")
     }
 
     fun estaActiva() = estado == EstadoObra.ACTIVA
