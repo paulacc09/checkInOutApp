@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mega.appcheckinout.ui.theme.BotonVolver
+
 @Composable
 fun LoginRolScreen(
     rolSeleccionado: String,
@@ -115,52 +116,19 @@ fun LoginRolScreen(
 
         // Botón Iniciar Sesión
         Button(
-            onClick = {
-                // ✅ Permite entrar a Administrativo, Inspector SST y Encargado
-                if (rolSeleccionado == "Administrativo" ||
-                    rolSeleccionado == "Inspector SST" ||
-                    rolSeleccionado == "Encargado") {
-                    onLoginExitoso()
-                }
-            },
+            onClick = { onLoginExitoso() },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colorPrimario,
-                disabledContainerColor = Color.Gray
+                containerColor = colorPrimario
             ),
             shape = RoundedCornerShape(25.dp),
-            enabled = when (rolSeleccionado) {
-                "Administrativo", "Inspector SST", "Encargado" -> {
-                    // ✅ Habilitado si hay usuario y contraseña
-                    password.isNotBlank() && usuario.isNotBlank()
-                }
-                else -> {
-                    // ❌ Otros roles: aún deshabilitado
-                    false
-                }
-            }
+            enabled = password.isNotBlank() && usuario.isNotBlank()
         ) {
             Text(
-                text = when (rolSeleccionado) {
-                    "Administrativo", "Inspector SST", "Encargado" -> "Iniciar Sesión"
-                    else -> "Próximamente"
-                },
+                text = "Iniciar Sesión",
                 fontSize = 16.sp
-            )
-        }
-
-        // Mensaje informativo solo para roles no disponibles
-        if (rolSeleccionado != "Administrativo" &&
-            rolSeleccionado != "Inspector SST" &&
-            rolSeleccionado != "Encargado") {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Esta funcionalidad estará disponible próximamente",
-                fontSize = 12.sp,
-                color = Color.Gray,
-                textAlign = TextAlign.Center
             )
         }
 

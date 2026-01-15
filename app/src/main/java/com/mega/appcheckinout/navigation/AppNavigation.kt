@@ -124,10 +124,11 @@ fun CheckInOutApp() {
                 rolSeleccionado = rolSeleccionado,
                 onLoginExitoso = {
                     // ✅ Redirige según el rol
-                    when (rolSeleccionado) {
-                        "Administrativo" -> pantallaActual = "dashboardAdmin"
-                        "Inspector SST" -> pantallaActual = "dashboardSST"
-                        else -> pantallaActual = "dashboardAdmin" // Fallback
+                    pantallaActual = when (rolSeleccionado) {
+                        "Administrativo" -> "dashboardAdmin"
+                        "Inspector SST" -> "dashboardSST"
+                        "Encargado" -> "dashboardEncargado"
+                        else -> "dashboardAdmin" // Fallback
                     }
                 },
                 onVolver = { pantallaActual = "seleccionRol" },
